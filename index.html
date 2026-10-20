@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nortval Bank &amp; Trust | Private Client Banking Portal</title>
+    <meta name="description" content="Nortval Bank & Trust - Premier Private Wealth, High-Yield Treasury Liquidity, and Fedwire Settlement." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      :root {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #020617;
+        color: #f8fafc;
+      }
+      .font-serif { font-family: 'Cinzel', Georgia, serif; }
+      .font-mono { font-family: 'JetBrains Mono', monospace; }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #0f172a; }
+      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+      ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+    </style>
+  </head>
+  <body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-emerald-500/30 selection:text-emerald-200">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect, createContext, useContext, useRef } = React;
+
+      // --- Configuration Data ---
+      const SUPPORTED_CURRENCIES = {
+        USD: { code: 'USD', symbol: '$', name: 'US Dollar ($)', rateAgainstUSD: 1.0 },
+        EUR: { code: 'EUR', symbol: '€', name: 'Euro (€)', rateAgainstUSD: 0.92 },
+        GBP: { code: 'GBP', symbol: '£', name: 'British Pound (£)', rateAgainstUSD: 0.79 },
+        CAD: { code: 'CAD', symbol: 'CA$', name: 'Canadian Dollar (CA$)', rateAgainstUSD: 1.36 },
+        CHF: { code: 'CHF', symbol: 'CHF', name: 'Swiss Franc (CHF)', rateAgainstUSD: 0.90 },
+        JPY: { code: 'JPY', symbol: '¥', name: 'Japanese Yen (¥)', rateAgainstUSD: 155.0 },
+        AUD: { code: 'AUD', symbol: 'A$', name: 'Australian Dollar (A$)', rateAgainstUSD: 1.52 },
+      };
+
+      const BANK_CONFIG = {
+        bankName: "Nortval Bank & Trust",
+        bankShortName: "Nortval",
+        bankRoutingNumber: "071101928",
+        swiftCode: "NRTVUS33XXX",
+        establishedYear: "1894",
+        fdicCertificate: "FDIC-491028-A",
+        customerServicePhone: "+1 (708) 628-7118",
+        customerServiceRawPhone: "+17086287118",
+        customerServiceEmail: "support@nortval.com",
+        customerServiceHours: "24/7 Dedicated Support",
+        auth: {
+          username: "harriet020",
+          password: "Harr1et0921",
+          pin: "0921",
+        },
+        account: {
+          accountHolderName: "Harriet Vance",
+          accountNumber: "4810-9281-7740",
+          accountType: "Nortval Premier Private Banking",
+          email: "harriet.vance@nortval-client.com",
+          avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+          phone: "+1 (555) 234-8901",
+          initialBalance: 50000.00,
+          initialSavingsBalance: 125000.00,
+          defaultCurrency: "USD",
+          isFrozen: false,
+        },
+        authorizedRecipient: {
+          accountNumber: "9823471029",
+          accountName: "Harriet Vance",
+          bankName: "JPMorgan Chase Bank",
+          routingNumber: "021000021",
+          accountType: "Checking",
+        },
+        additionalAllowedAccounts: [
+          {
+            accountNumber: "9823471029",
+            accountName: "Harriet Vance",
+            bankName: "JPMorgan Chase Bank",
+            routingNumber: "021000021",
+            accountType: "Checking",
+          },
+          {
+            accountNumber: "481092817740",
+            accountName: "Harriet Vance",
+            bankName: "Nortval Bank & Trust",
+            routingNumber: "071101928",
+            accountType: "Savings Reserve",
+          }
+        ]
+      };
+
+      const INITIAL_TRANSACTIONS = [
+        {
+          id: 'tx-001',
+          referenceNumber: 'NRTV-982104-FED',
+          date: 'Today, 10:14 AM',
+          timestamp: Date.now() - 3600000 * 2,
+          type: 'deposit',
+          description: 'Direct Deposit - Global Wealth Management Yield',
+          amount: 14250.00,
+          currency: 'USD',
+          status: 'completed',
+          category: 'Direct Deposit',
+          note: 'Quarterly dividends distribution',
+        },
+        {
+          id: 'tx-002',
+          referenceNumber: 'NRTV-881290-WRE',
+          date: 'Yesterday, 03:42 PM',
+          timestamp: Date.now() - 3600000 * 24,
+          type: 'transfer_in',
+          description: 'Incoming Fedwire from Morgan Stanley Private Wealth',
+          recipientName: 'Harriet Vance',
+          amount: 35000.00,
+          currency: 'USD',
+          status: 'completed',
+          category: 'Wire Transfer',
+          note: 'Ref: Portfolio rebalance settlement',
+        },
+        {
+          id: 'tx-003',
+          referenceNumber: 'NRTV-773192-FEE',
+          date: 'May 12, 2026',
+          timestamp: Date.now() - 3600000 * 48,
+          type: 'fee',
+          description: 'Nortval Private Client Concierge Custody Fee',
+          amount: -150.00,
+          currency: 'USD',
+          status: 'completed',
+          category: 'Service Fee',
+          note: 'Monthly premier maintenance waived 50%',
+        },
+        {
+          id: 'tx-004',
+          referenceNumber: 'NRTV-612984-INT',
+          date: 'May 01, 2026',
+          timestamp: Date.now() - 3600000 * 120,
+          type: 'interest',
+          description: 'High-Yield Treasury Interest Credit',
+          amount: 890.50,
+          currency: 'USD',
+          status: 'completed',
+          category: 'Account Funding',
+          note: 'Annualized 4.85% APY payout',
+        }
+      ];
+
+      const INITIAL_CARDS = [
+        {
+          id: 'card-1',
+          cardNumber: '4819 9201 4819 9281',
+          cardHolder: 'HARRIET VANCE',
+          expiryDate: '09/29',
+          cvv: '812',
+          type: 'Visa Infinite Debit',
+          isFrozen: false,
+          spendingLimit: 25000,
+          dailyWithdrawalLimit: 5000,
+          color: 'from-slate-900 via-slate-800 to-emerald-950',
+        },
+        {
+          id: 'card-2',
+          cardNumber: '5420 1184 9281 7740',
+          cardHolder: 'HARRIET VANCE',
+          expiryDate: '12/30',
+          cvv: '449',
+          type: 'Mastercard World Elite',
+          isFrozen: false,
+          spendingLimit: 50000,
+          dailyWithdrawalLimit: 10000,
+          color: 'from-zinc-900 via-amber-950/70 to-slate-900',
+        }
+      ];
+
+      // --- Context ---
+      const BankContext = createContext(null);
+
+      const BankProvider = ({ children }) => {
+        const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('nortval_auth') === 'true');
+        const [user, setUser] = useState(() => {
+          const saved = localStorage.getItem('nortval_user');
+          if (saved) { try { return JSON.parse(saved); } catch (e) {} }
+          return {
+            username: BANK_CONFIG.auth.username,
+            name: BANK_CONFIG.account.accountHolderName,
+            email: BANK_CONFIG.account.email,
+            avatarUrl: BANK_CONFIG.account.avatarUrl,
+            phone: BANK_CONFIG.account.phone,
+          };
+        });
+        const [balance, setBalance] = useState(() => {
+          const saved = localStorage.getItem('nortval_balance');
+          return saved ? parseFloat(saved) : BANK_CONFIG.account.initialBalance;
+        });
+        const [savingsBalance, setSavingsBalance] = useState(() => {
+          const saved = localStorage.getItem('nortval_savings_balance');
+          return saved ? parseFloat(saved) : BANK_CONFIG.account.initialSavingsBalance;
+        });
+        const [currency, setCurrencyState] = useState(() => localStorage.getItem('nortval_currency') || BANK_CONFIG.account.defaultCurrency);
+        const [isFrozen, setIsFrozen] = useState(() => {
+          const saved = localStorage.getItem('nortval_frozen');
+          return saved !== null ? saved === 'true' : BANK_CONFIG.account.isFrozen;
+        });
+        const [transactions, setTransactions] = useState(() => {
+          const saved = localStorage.getItem('nortval_transactions');
+          if (saved) { try { return JSON.parse(saved); } catch (e) {} }
+          return INITIAL_TRANSACTIONS;
+        });
+        const [cards, setCards] = useState(() => {
+          const saved = localStorage.getItem('nortval_cards');
+          if (saved) { try { return JSON.parse(saved); } catch (e) {} }
+          return INITIAL_CARDS;
+        });
+
+        const [supportModalOpen, setSupportModalOpen] = useState(false);
+        const [supportContext, setSupportContext] = useState(null);
+        const [loanModalOpen, setLoanModalOpen] = useState(false);
+        const [serviceUnavailableContext, setServiceUnavailableContext] = useState(null);
+
+        useEffect(() => { localStorage.setItem('nortval_auth', String(isAuthenticated)); }, [isAuthenticated]);
+        useEffect(() => { localStorage.setItem('nortval_user', JSON.stringify(user)); }, [user]);
+        useEffect(() => { localStorage.setItem('nortval_balance', String(balance)); }, [balance]);
+        useEffect(() => { localStorage.setItem('nortval_savings_balance', String(savingsBalance)); }, [savingsBalance]);
+        useEffect(() => { localStorage.setItem('nortval_currency', currency); }, [currency]);
+        useEffect(() => { localStorage.setItem('nortval_frozen', String(isFrozen)); }, [isFrozen]);
+        useEffect(() => { localStorage.setItem('nortval_transactions', JSON.stringify(transactions)); }, [transactions]);
+        useEffect(() => { localStorage.setItem('nortval_cards', JSON.stringify(cards)); }, [cards]);
+
+        const currencyConfig = SUPPORTED_CURRENCIES[currency] || SUPPORTED_CURRENCIES.USD;
+
+        const formatAmount = (amountInUSD, targetCurrencyCode) => {
+          const curr = targetCurrencyCode ? (SUPPORTED_CURRENCIES[targetCurrencyCode] || currencyConfig) : currencyConfig;
+          const converted = amountInUSD * curr.rateAgainstUSD;
+          return `${curr.symbol}${converted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        };
+
+        const login = (inputUsername, inputPassword, inputPin) => {
+          if (inputUsername.trim().toLowerCase() !== user.username.toLowerCase()) {
+            return { success: false, errorType: 'WRONG_USERNAME', message: `Account not found for username "${inputUsername}".` };
+          }
+          if (inputPassword !== BANK_CONFIG.auth.password) {
+            return { success: false, errorType: 'WRONG_PASSWORD', message: `Incorrect password provided.` };
+          }
+          if (inputPin.trim() !== BANK_CONFIG.auth.pin) {
+            return { success: false, errorType: 'WRONG_PIN', message: `Invalid 4-digit Security PIN.` };
+          }
+          setIsAuthenticated(true);
+          return { success: true };
+        };
+
+        const logout = () => {
+          setIsAuthenticated(false);
+          localStorage.removeItem('nortval_auth');
+        };
+
+        const updateProfile = (updated) => setUser(prev => ({ ...prev, ...updated }));
+        const setCurrency = (code) => { if (SUPPORTED_CURRENCIES[code]) setCurrencyState(code); };
+        const setAccountBalance = (newBalance) => setBalance(Math.max(0, newBalance));
+        const toggleAccountFreeze = (forcedStatus) => setIsFrozen(prev => forcedStatus !== undefined ? forcedStatus : !prev);
+        const toggleCardFreeze = (cardId) => setCards(prev => prev.map(c => c.id === cardId ? { ...c, isFrozen: !c.isFrozen } : c));
+
+        const executeTransfer = (payload) => {
+          if (isFrozen) {
+            openCustomerService('Account Frozen - Transfer Blocked', 'My account is frozen.');
+            return { success: false, error: `Transfer restricted: Your Nortval account is currently FROZEN.` };
+          }
+          if (payload.amount <= 0 || isNaN(payload.amount)) {
+            return { success: false, error: 'Please enter a valid amount.' };
+          }
+          if (payload.amount > balance) {
+            return { success: false, error: `Insufficient funds.` };
+          }
+          setBalance(balance - payload.amount);
+          const newTx = {
+            id: `tx-${Date.now()}`,
+            referenceNumber: `NRTV-${Math.floor(100000 + Math.random() * 900000)}-WRE`,
+            date: 'Just now',
+            timestamp: Date.now(),
+            type: 'transfer_out',
+            description: `Wire Transfer to ${payload.recipientName} (${payload.recipientBank})`,
+            recipientName: payload.recipientName,
+            recipientBank: payload.recipientBank,
+            recipientAccount: payload.recipientAccount,
+            amount: -payload.amount,
+            currency: currency,
+            status: 'completed',
+            category: 'Wire Transfer',
+            note: payload.note || 'Online Wire Transfer',
+          };
+          setTransactions(prev => [newTx, ...prev]);
+          return { success: true, transaction: newTx };
+        };
+
+        const openCustomerService = (reason, prefillMessage) => { setSupportContext({ reason, prefillMessage }); setSupportModalOpen(true); };
+        const closeCustomerService = () => { setSupportModalOpen(false); setSupportContext(null); };
+        const openLoanModal = () => setLoanModalOpen(true);
+        const closeLoanModal = () => setLoanModalOpen(false);
+        const openServiceUnavailableModal = (title, service, description) => setServiceUnavailableContext({ title, service, description });
+        const closeServiceUnavailableModal = () => setServiceUnavailableContext(null);
+
+        const resetToDefaultConfig = () => {
+          setBalance(BANK_CONFIG.account.initialBalance);
+          setSavingsBalance(BANK_CONFIG.account.initialSavingsBalance);
+          setCurrencyState(BANK_CONFIG.account.defaultCurrency);
+          setIsFrozen(BANK_CONFIG.account.isFrozen);
+          setUser({ username: BANK_CONFIG.auth.username, name: BANK_CONFIG.account.accountHolderName, email: BANK_CONFIG.account.email, avatarUrl: BANK_CONFIG.account.avatarUrl, phone: BANK_CONFIG.account.phone });
+          setTransactions(INITIAL_TRANSACTIONS);
+          setCards(INITIAL_CARDS);
+          localStorage.clear();
+        };
+
+        return (
+          <BankContext.Provider value={{
+            isAuthenticated, login, logout, user, updateProfile, balance, savingsBalance, currency, currencyConfig,
+            setCurrency, setAccountBalance, formatAmount, isFrozen, toggleAccountFreeze, transactions, cards, toggleCardFreeze,
+            executeTransfer, supportModalOpen, supportContext, openCustomerService, closeCustomerService, loanModalOpen,
+            openLoanModal, closeLoanModal, serviceUnavailableContext, openServiceUnavailableModal, closeServiceUnavailableModal, resetToDefaultConfig
+          }}>
+            {children}
+          </BankContext.Provider>
+        );
+      };
+
+      const useBank = () => useContext(BankContext);
+
+      // --- UI Components ---
+      const CustomerServiceFloat = () => {
+        const { openCustomerService } = useBank();
+        return (
+          <div className="fixed bottom-5 right-5 z-40 flex items-center gap-2">
+            <button onClick={() => openCustomerService('General Client Assistance')} className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl hover:scale-110 transition-all font-bold">
+              💬
+            </button>
+          </div>
+        );
+      };
+
+      const CustomerServiceModal = () => {
+        const { supportModalOpen, closeCustomerService, supportContext, user } = useBank();
+        if (!supportModalOpen) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6 space-y-4 text-xs text-slate-200">
+              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-semibold text-white">Nortval Support &amp; SMS Hotline</h3>
+                <button onClick={closeCustomerService} className="text-slate-400 hover:text-white font-bold">✕</button>
+              </div>
+              <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-xl p-4 space-y-2 text-center">
+                <div className="text-emerald-400 font-semibold uppercase">Official Support Line</div>
+                <div className="text-2xl font-mono font-bold text-white">{BANK_CONFIG.customerServicePhone}</div>
+                <p className="text-slate-300">Contact our 24/7 concierge desk for immediate assistance with unfreezing accounts or authorizing wire transfers.</p>
+              </div>
+              <a href={`sms:${BANK_CONFIG.customerServiceRawPhone}`} className="block w-full bg-emerald-600 text-white text-center py-3 rounded-xl font-semibold">Send SMS Now</a>
+            </div>
+          </div>
+        );
+      };
+
+      const LoanModal = () => {
+        const { loanModalOpen, closeLoanModal, openCustomerService } = useBank();
+        if (!loanModalOpen) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6 space-y-4 text-xs text-slate-200">
+              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-semibold text-white">Nortval Private Credit &amp; Lending</h3>
+                <button onClick={closeLoanModal} className="text-slate-400 hover:text-white">✕</button>
+              </div>
+              <p className="text-slate-300">Self-service online credit applications are currently undergoing maintenance. Please reach out to your private wealth lending officer via SMS.</p>
+              <button onClick={() => { closeLoanModal(); openCustomerService('Private Lending Inquiry'); }} className="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-semibold">Contact Lending Desk</button>
+            </div>
+          </div>
+        );
+      };
+
+      const GeneralServiceUnavailableModal = () => {
+        const { serviceUnavailableContext, closeServiceUnavailableModal, openCustomerService } = useBank();
+        if (!serviceUnavailableContext) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6 space-y-4 text-xs text-slate-200">
+              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-semibold text-white">{serviceUnavailableContext.title}</h3>
+                <button onClick={closeServiceUnavailableModal} className="text-slate-400 hover:text-white">✕</button>
+              </div>
+              <p className="text-slate-300">{serviceUnavailableContext.description}</p>
+              <button onClick={() => { closeServiceUnavail
