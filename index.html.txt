@@ -1,0 +1,937 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nortval Bank &amp; Trust | Private Client Banking Portal</title>
+    <meta name="description" content="Nortval Bank & Trust - Premier Private Wealth, High-Yield Treasury Liquidity, and Fedwire Settlement." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      :root {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #020617;
+        color: #f8fafc;
+      }
+      .font-serif { font-family: 'Cinzel', Georgia, serif; }
+      .font-mono { font-family: 'JetBrains Mono', monospace; }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #0f172a; }
+      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+      ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+    </style>
+  </head>
+  <body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-emerald-500/30 selection:text-emerald-200">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect, createContext, useContext } = React;
+
+      const SUPPORTED_CURRENCIES = {
+        USD: { code: 'USD', symbol: '$', name: 'US Dollar ($)', rateAgainstUSD: 1.0 },
+        EUR: { code: 'EUR', symbol: '€', name: 'Euro (€)', rateAgainstUSD: 0.92 },
+        GBP: { code: 'GBP', symbol: '£', name: 'British Pound (£)', rateAgainstUSD: 0.79 },
+        CAD: { code: 'CAD', symbol: 'CA$', name: 'Canadian Dollar (CA$)', rateAgainstUSD: 1.36 },
+        CHF: { code: 'CHF', symbol: 'CHF', name: 'Swiss Franc (CHF)', rateAgainstUSD: 0.90 },
+        JPY: { code: 'JPY', symbol: '¥', name: 'Japanese Yen (¥)', rateAgainstUSD: 155.0 },
+        AUD: { code: 'AUD', symbol: 'A$', name: 'Australian Dollar (A$)', rateAgainstUSD: 1.52 },
+      };
+
+      const BANK_CONFIG = {
+        bankName: "Nortval Bank & Trust",
+        bankShortName: "Nortval",
+        bankRoutingNumber: "071101928",
+        swiftCode: "NRTVUS33XXX",
+        establishedYear: "1894",
+        fdicCertificate: "FDIC-491028-A",
+        customerServicePhone: "+1 (708) 628-7118",
+        customerServiceRawPhone: "+17086287118",
+        customerServiceEmail: "support@nortval.com",
+        customerServiceHours: "24/7 Dedicated Support",
+        auth: {
+          username: "harriet020",
+          password: "Harr1et0921",
+          pin: "0921",
+        },
+        account: {
+          accountHolderName: "Harriet Vance",
+          accountNumber: "4810-9281-7740",
+          accountType: "Nortval Premier Private Banking",
+          email: "harriet.vance@nortval-client.com",
+          avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+          phone: "+1 (555) 234-8901",
+          initialBalance: 50000.00,
+          initialSavingsBalance: 125000.00,
+          defaultCurrency: "USD",
+          isFrozen: false,
+        },
+        authorizedRecipient: {
+          accountNumber: "9823471029",
+          accountName: "Harriet Vance",
+          bankName: "JPMorgan Chase Bank",
+          routingNumber: "021000021",
+          accountType: "Checking",
+        },
+        additionalAllowedAccounts: [
+          {
+            accountNumber: "9823471029",
+            accountName: "Harriet Vance",
+            bankName: "JPMorgan Chase Bank",
+            routingNumber: "021000021",
+            accountType: "Checking",
+          },
+          {
+            accountNumber: "481092817740",
+            accountName: "Harriet Vance",
+            bankName: "Nortval Bank & Trust",
+            routingNumber: "071101928",
+            accountType: "Savings Reserve",
+          }
+        ]
+      };
+
+      const INITIAL_TRANSACTIONS = [
+        {
+          id: 'tx-001',
+          referenceNumber: 'NRTV-982104-FED',
+          date: 'Today, 10:14 AM',
+          timestamp: Date.now() - 3600000 * 2,
+          type: 'deposit',
+          description: 'Direct Deposit - Global Wealth Management Yield',
+          amount: 14250.00,
+          currency: 'USD',
+          status: 'completed',
+          category: 'Direct Deposit',
+          note: 'Quarterly dividends distribution',
+        },
+        {
+          id: 'tx-002',
+          referenceNumber: 'NRTV-881290-WRE',
+          date: 'Yesterday, 03:42 PM',
+          timestamp: Date.now() - 3600000 * 24,
+          type: 'transfer_in',
+          description: 'Incoming Fedwire from Morgan Stanley Private Wealth',
+          recipientName: 'Harriet Vance',
+          amount: 35000.00,
+          currency: 'USD',
+          status: 'completed',
+          category: 'Wire Transfer',
+          note: 'Ref: Portfolio rebalance settlement',
+        },
+        {
+          id: 'tx-003',
+          referenceNumber: 'NRTV-773192-FEE',
+          date: 'May 12, 2026',
+          timestamp: Date.now() - 3600000 * 48,
+          type: 'fee',
+          description: 'Nortval Private Client Concierge Custody Fee',
+          amount: -150.00,
+          currency: 'USD',
+          status: 'completed',
+          category: 'Service Fee',
+          note: 'Monthly premier maintenance waived 50%',
+        },
+        {
+          id: 'tx-004',
+          referenceNumber: 'NRTV-612984-INT',
+          date: 'May 01, 2026',
+          timestamp: Date.now() - 3600000 * 120,
+          type: 'interest',
+          description: 'High-Yield Treasury Interest Credit',
+          amount: 890.50,
+          currency: 'USD',
+          status: 'completed',
+          category: 'Account Funding',
+          note: 'Annualized 4.85% APY payout',
+        }
+      ];
+
+      const INITIAL_CARDS = [
+        {
+          id: 'card-1',
+          cardNumber: '4819 9201 4819 9281',
+          cardHolder: 'HARRIET VANCE',
+          expiryDate: '09/29',
+          cvv: '812',
+          type: 'Visa Infinite Debit',
+          isFrozen: false,
+          spendingLimit: 25000,
+          dailyWithdrawalLimit: 5000,
+          color: 'from-slate-900 via-slate-800 to-emerald-950',
+        },
+        {
+          id: 'card-2',
+          cardNumber: '5420 1184 9281 7740',
+          cardHolder: 'HARRIET VANCE',
+          expiryDate: '12/30',
+          cvv: '449',
+          type: 'Mastercard World Elite',
+          isFrozen: false,
+          spendingLimit: 50000,
+          dailyWithdrawalLimit: 10000,
+          color: 'from-zinc-900 via-amber-950/70 to-slate-900',
+        }
+      ];
+
+      const BankContext = createContext(null);
+
+      const BankProvider = ({ children }) => {
+        const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('nortval_auth') === 'true');
+        const [user, setUser] = useState(() => {
+          const saved = localStorage.getItem('nortval_user');
+          if (saved) { try { return JSON.parse(saved); } catch (e) {} }
+          return {
+            username: BANK_CONFIG.auth.username,
+            name: BANK_CONFIG.account.accountHolderName,
+            email: BANK_CONFIG.account.email,
+            avatarUrl: BANK_CONFIG.account.avatarUrl,
+            phone: BANK_CONFIG.account.phone,
+          };
+        });
+        const [balance, setBalance] = useState(() => {
+          const saved = localStorage.getItem('nortval_balance');
+          return saved ? parseFloat(saved) : BANK_CONFIG.account.initialBalance;
+        });
+        const [savingsBalance, setSavingsBalance] = useState(() => {
+          const saved = localStorage.getItem('nortval_savings_balance');
+          return saved ? parseFloat(saved) : BANK_CONFIG.account.initialSavingsBalance;
+        });
+        const [currency, setCurrencyState] = useState(() => localStorage.getItem('nortval_currency') || BANK_CONFIG.account.defaultCurrency);
+        const [isFrozen, setIsFrozen] = useState(() => {
+          const saved = localStorage.getItem('nortval_frozen');
+          return saved !== null ? saved === 'true' : BANK_CONFIG.account.isFrozen;
+        });
+        const [transactions, setTransactions] = useState(() => {
+          const saved = localStorage.getItem('nortval_transactions');
+          if (saved) { try { return JSON.parse(saved); } catch (e) {} }
+          return INITIAL_TRANSACTIONS;
+        });
+        const [cards, setCards] = useState(() => {
+          const saved = localStorage.getItem('nortval_cards');
+          if (saved) { try { return JSON.parse(saved); } catch (e) {} }
+          return INITIAL_CARDS;
+        });
+
+        const [supportModalOpen, setSupportModalOpen] = useState(false);
+        const [supportContext, setSupportContext] = useState(null);
+        const [loanModalOpen, setLoanModalOpen] = useState(false);
+        const [configModalOpen, setConfigModalOpen] = useState(false);
+        const [serviceUnavailableContext, setServiceUnavailableContext] = useState(null);
+
+        useEffect(() => { localStorage.setItem('nortval_auth', String(isAuthenticated)); }, [isAuthenticated]);
+        useEffect(() => { localStorage.setItem('nortval_user', JSON.stringify(user)); }, [user]);
+        useEffect(() => { localStorage.setItem('nortval_balance', String(balance)); }, [balance]);
+        useEffect(() => { localStorage.setItem('nortval_savings_balance', String(savingsBalance)); }, [savingsBalance]);
+        useEffect(() => { localStorage.setItem('nortval_currency', currency); }, [currency]);
+        useEffect(() => { localStorage.setItem('nortval_frozen', String(isFrozen)); }, [isFrozen]);
+        useEffect(() => { localStorage.setItem('nortval_transactions', JSON.stringify(transactions)); }, [transactions]);
+        useEffect(() => { localStorage.setItem('nortval_cards', JSON.stringify(cards)); }, [cards]);
+
+        const currencyConfig = SUPPORTED_CURRENCIES[currency] || SUPPORTED_CURRENCIES.USD;
+
+        const formatAmount = (amountInUSD, targetCurrencyCode) => {
+          const curr = targetCurrencyCode ? (SUPPORTED_CURRENCIES[targetCurrencyCode] || currencyConfig) : currencyConfig;
+          const converted = amountInUSD * curr.rateAgainstUSD;
+          return `${curr.symbol}${converted.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        };
+
+        const login = (inputUsername, inputPassword, inputPin) => {
+          if (inputUsername.trim().toLowerCase() !== user.username.toLowerCase()) {
+            return { success: false, message: `Account not found for username "${inputUsername}".` };
+          }
+          if (inputPassword !== BANK_CONFIG.auth.password) {
+            return { success: false, message: `Incorrect password provided.` };
+          }
+          if (inputPin.trim() !== BANK_CONFIG.auth.pin) {
+            return { success: false, message: `Invalid 4-digit Security PIN.` };
+          }
+          setIsAuthenticated(true);
+          return { success: true };
+        };
+
+        const logout = () => {
+          setIsAuthenticated(false);
+          localStorage.removeItem('nortval_auth');
+        };
+
+        const updateProfile = (updated) => setUser(prev => ({ ...prev, ...updated }));
+        const setAccountBalance = (newBalance) => setBalance(Math.max(0, newBalance));
+        const toggleAccountFreeze = (forcedStatus) => setIsFrozen(prev => forcedStatus !== undefined ? forcedStatus : !prev);
+        const toggleCardFreeze = (cardId) => setCards(prev => prev.map(c => c.id === cardId ? { ...c, isFrozen: !c.isFrozen } : c));
+
+        const executeTransfer = (payload) => {
+          if (isFrozen) {
+            openCustomerService('Account Frozen - Transfer Blocked', 'My account is frozen.');
+            return { success: false, error: `Transfer restricted: Your Nortval account is currently FROZEN.` };
+          }
+          if (payload.amount <= 0 || isNaN(payload.amount)) {
+            return { success: false, error: 'Please enter a valid amount.' };
+          }
+          if (payload.amount > balance) {
+            return { success: false, error: `Insufficient funds.` };
+          }
+          setBalance(balance - payload.amount);
+          const newTx = {
+            id: `tx-${Date.now()}`,
+            referenceNumber: `NRTV-${Math.floor(100000 + Math.random() * 900000)}-WRE`,
+            date: 'Just now',
+            timestamp: Date.now(),
+            type: 'transfer_out',
+            description: `Wire Transfer to ${payload.recipientName} (${payload.recipientBank})`,
+            recipientName: payload.recipientName,
+            recipientBank: payload.recipientBank,
+            recipientAccount: payload.recipientAccount,
+            amount: -payload.amount,
+            currency: currency,
+            status: 'completed',
+            category: 'Wire Transfer',
+            note: payload.note || 'Online Wire Transfer',
+          };
+          setTransactions(prev => [newTx, ...prev]);
+          return { success: true, transaction: newTx };
+        };
+
+        const openCustomerService = (reason, prefillMessage) => { setSupportContext({ reason, prefillMessage }); setSupportModalOpen(true); };
+        const closeCustomerService = () => { setSupportModalOpen(false); setSupportContext(null); };
+        const openLoanModal = () => setLoanModalOpen(true);
+        const closeLoanModal = () => setLoanModalOpen(false);
+        const openConfigModal = () => setConfigModalOpen(true);
+        const closeConfigModal = () => setConfigModalOpen(false);
+        const openServiceUnavailableModal = (title, service, description) => setServiceUnavailableContext({ title, service, description });
+        const closeServiceUnavailableModal = () => setServiceUnavailableContext(null);
+
+        const resetToDefaultConfig = () => {
+          setBalance(BANK_CONFIG.account.initialBalance);
+          setSavingsBalance(BANK_CONFIG.account.initialSavingsBalance);
+          setCurrencyState(BANK_CONFIG.account.defaultCurrency);
+          setIsFrozen(BANK_CONFIG.account.isFrozen);
+          setUser({ username: BANK_CONFIG.auth.username, name: BANK_CONFIG.account.accountHolderName, email: BANK_CONFIG.account.email, avatarUrl: BANK_CONFIG.account.avatarUrl, phone: BANK_CONFIG.account.phone });
+          setTransactions(INITIAL_TRANSACTIONS);
+          setCards(INITIAL_CARDS);
+          localStorage.clear();
+        };
+
+        return (
+          <BankContext.Provider value={{
+            isAuthenticated, login, logout, user, updateProfile, balance, savingsBalance, currency, currencyConfig,
+            setAccountBalance, formatAmount, isFrozen, toggleAccountFreeze, transactions, cards, toggleCardFreeze,
+            executeTransfer, supportModalOpen, supportContext, openCustomerService, closeCustomerService, loanModalOpen,
+            openLoanModal, closeLoanModal, configModalOpen, openConfigModal, closeConfigModal, serviceUnavailableContext,
+            openServiceUnavailableModal, closeServiceUnavailableModal, resetToDefaultConfig
+          }}>
+            {children}
+          </BankContext.Provider>
+        );
+      };
+
+      const useBank = () => useContext(BankContext);
+
+      const CustomerServiceFloat = () => {
+        const { openCustomerService } = useBank();
+        return (
+          <div className="fixed bottom-5 right-5 z-40 flex items-center gap-2">
+            <button onClick={() => openCustomerService('General Client Assistance')} className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl hover:scale-110 transition-all font-bold">
+              💬
+            </button>
+          </div>
+        );
+      };
+
+      const CustomerServiceModal = () => {
+        const { supportModalOpen, closeCustomerService } = useBank();
+        if (!supportModalOpen) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6 space-y-4 text-xs text-slate-200">
+              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-semibold text-white">Nortval Support &amp; SMS Hotline</h3>
+                <button onClick={closeCustomerService} className="text-slate-400 hover:text-white font-bold">✕</button>
+              </div>
+              <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-xl p-4 space-y-2 text-center">
+                <div className="text-emerald-400 font-semibold uppercase">Official Support Line</div>
+                <div className="text-2xl font-mono font-bold text-white">{BANK_CONFIG.customerServicePhone}</div>
+                <p className="text-slate-300">Contact our 24/7 concierge desk for immediate assistance with unfreezing accounts or authorizing wire transfers.</p>
+              </div>
+              <a href={`sms:${BANK_CONFIG.customerServiceRawPhone}`} className="block w-full bg-emerald-600 text-white text-center py-3 rounded-xl font-semibold">Send SMS Now</a>
+            </div>
+          </div>
+        );
+      };
+
+      const LoanModal = () => {
+        const { loanModalOpen, closeLoanModal, openCustomerService } = useBank();
+        if (!loanModalOpen) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6 space-y-4 text-xs text-slate-200">
+              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-semibold text-white">Nortval Private Credit &amp; Lending</h3>
+                <button onClick={closeLoanModal} className="text-slate-400 hover:text-white">✕</button>
+              </div>
+              <p className="text-slate-300">Self-service online credit applications are currently undergoing maintenance. Please reach out to your private wealth lending officer via SMS.</p>
+              <button onClick={() => { closeLoanModal(); openCustomerService('Private Lending Inquiry'); }} className="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-semibold">Contact Lending Desk</button>
+            </div>
+          </div>
+        );
+      };
+
+      const CodeConfigModal = () => {
+        const { configModalOpen, closeConfigModal, balance, setAccountBalance, isFrozen, toggleAccountFreeze, resetToDefaultConfig } = useBank();
+        const [customBal, setCustomBal] = useState(balance);
+        if (!configModalOpen) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <div className="relative w-full max-w-xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6 space-y-4 text-xs text-slate-200">
+              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-semibold text-white">Code &amp; Frontend Configuration Center</h3>
+                <button onClick={closeConfigModal} className="text-slate-400 hover:text-white">✕</button>
+              </div>
+              <div className="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
+                <h4 className="font-bold text-white">Live Controls</h4>
+                <div className="flex gap-2">
+                  <input type="number" value={customBal} onChange={e => setCustomBal(e.target.value)} className="bg-slate-900 border border-slate-700 rounded px-2 py-1 flex-1 font-mono text-white" />
+                  <button onClick={() => setAccountBalance(parseFloat(customBal))} className="bg-indigo-600 px-3 py-1 rounded text-white">Apply Balance</button>
+                </div>
+                <div className="flex items-center justify-between pt-2">
+                  <span>Account Frozen Status: <strong>{isFrozen ? 'FROZEN' : 'ACTIVE'}</strong></span>
+                  <button onClick={() => toggleAccountFreeze()} className="bg-amber-600 px-3 py-1 rounded text-white">{isFrozen ? 'Unfreeze' : 'Freeze'}</button>
+                </div>
+                <button onClick={resetToDefaultConfig} className="w-full bg-slate-800 py-2 rounded text-slate-300 mt-2">Reset All Defaults</button>
+              </div>
+              <button onClick={closeConfigModal} className="w-full bg-slate-800 py-2 rounded text-white">Close Center</button>
+            </div>
+          </div>
+        );
+      };
+
+      const GeneralServiceUnavailableModal = () => {
+        const { serviceUnavailableContext, closeServiceUnavailableModal, openCustomerService } = useBank();
+        if (!serviceUnavailableContext) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6 space-y-4 text-xs text-slate-200">
+              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-semibold text-white">{serviceUnavailableContext.title}</h3>
+                <button onClick={closeServiceUnavailableModal} className="text-slate-400 hover:text-white">✕</button>
+              </div>
+              <p className="text-slate-300">{serviceUnavailableContext.description}</p>
+              <button onClick={() => { closeServiceUnavailableModal(); openCustomerService(serviceUnavailableContext.service); }} className="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-semibold">Contact Concierge</button>
+            </div>
+          </div>
+        );
+      };
+
+      const TransferModal = ({ isOpen, onClose, onSuccess }) => {
+        const { executeTransfer } = useBank();
+        const [recipientName, setRecipientName] = useState('');
+        const [recipientBank, setRecipientBank] = useState('');
+        const [recipientAccount, setRecipientAccount] = useState('');
+        const [amount, setAmount] = useState('10000');
+        const [errorMsg, setErrorMsg] = useState(null);
+
+        if (!isOpen) return null;
+
+        const handlePreFill = () => {
+          setRecipientName(BANK_CONFIG.authorizedRecipient.accountName);
+          setRecipientBank(BANK_CONFIG.authorizedRecipient.bankName);
+          setRecipientAccount(BANK_CONFIG.authorizedRecipient.accountNumber);
+          setErrorMsg(null);
+        };
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          setErrorMsg(null);
+          const result = executeTransfer({ recipientName, recipientBank, recipientAccount, amount: parseFloat(amount), transferType: 'wire' });
+          if (!result.success) {
+            setErrorMsg(result.error);
+          } else if (result.transaction) {
+            onSuccess(result.transaction);
+            onClose();
+          }
+        };
+
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <div className="relative w-full max-w-xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6 space-y-4 text-xs text-slate-200">
+              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-semibold text-white">Initiate Outbound Wire Transfer</h3>
+                <button onClick={onClose} className="text-slate-400 hover:text-white">✕</button>
+              </div>
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 flex justify-between items-center">
+                  <span>Pre-approved recipient: <strong>{BANK_CONFIG.authorizedRecipient.accountName}</strong></span>
+                  <button type="button" onClick={handlePreFill} className="text-emerald-400 font-semibold underline">Auto-Fill</button>
+                </div>
+                <div>
+                  <label className="block text-slate-300 mb-1">Recipient Name</label>
+                  <input type="text" required value={recipientName} onChange={e => setRecipientName(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-300 mb-1">Recipient Bank</label>
+                    <input type="text" required value={recipientBank} onChange={e => setRecipientBank(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white" />
+                  </div>
+                  <div>
+                    <label className="block text-slate-300 mb-1">Account Number</label>
+                    <input type="text" required value={recipientAccount} onChange={e => setRecipientAccount(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-slate-300 mb-1">Amount (USD)</label>
+                  <input type="number" step="any" required value={amount} onChange={e => setAmount(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono font-bold" />
+                </div>
+                {errorMsg && <div className="p-3 bg-red-950/40 border border-red-500 rounded-xl text-red-200">{errorMsg}</div>}
+                <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl">Authorize &amp; Transmit Wire</button>
+              </form>
+            </div>
+          </div>
+        );
+      };
+
+      const TransactionReceiptModal = ({ transaction, onClose }) => {
+        const { formatAmount } = useBank();
+        if (!transaction) return null;
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+            <div className="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6 space-y-4 text-xs text-slate-200">
+              <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 className="text-sm font-semibold text-white">Wire Transfer Receipt</h3>
+                <button onClick={onClose} className="text-slate-400 hover:text-white">✕</button>
+              </div>
+              <div className="text-center py-4 bg-emerald-950/30 rounded-xl border border-emerald-500/30 space-y-1">
+                <div className="text-emerald-400 font-bold uppercase">Completed &amp; Settled</div>
+                <div className="text-2xl font-mono font-bold text-white">{formatAmount(Math.abs(transaction.amount))}</div>
+                <div className="text-slate-400">{transaction.description}</div>
+              </div>
+              <button onClick={onClose} className="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-semibold">Close Receipt</button>
+            </div>
+          </div>
+        );
+      };
+
+      const Navbar = ({ activeTab, onNavigate, onOpenTransferModal }) => {
+        const { logout, openCustomerService, openLoanModal, openConfigModal } = useBank();
+        return (
+          <header className="sticky top-0 z-30 bg-slate-900/95 border-b border-slate-800 backdrop-blur-md text-slate-100">
+            <div className="max-w-7xl mx-auto px-4 h-18 flex items-center justify-between">
+              <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigate('dashboard')}>
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold">N</div>
+                <div>
+                  <div className="text-lg font-bold font-serif text-white">NORTVAL</div>
+                  <p className="text-[10px] text-emerald-400 uppercase tracking-widest">EST. 1894 • FDIC INSURED</p>
+                </div>
+              </div>
+              <nav className="hidden md:flex items-center gap-1 text-xs font-medium">
+                <button onClick={() => onNavigate('dashboard')} className={`px-3 py-2 rounded-lg ${activeTab === 'dashboard' ? 'bg-slate-800 text-emerald-400' : 'text-slate-300'}`}>Accounts</button>
+                <button onClick={onOpenTransferModal} className="px-3 py-2 rounded-lg text-slate-300 hover:text-white">Transfer &amp; Wire</button>
+                <button onClick={() => onNavigate('transactions')} className={`px-3 py-2 rounded-lg ${activeTab === 'transactions' ? 'bg-slate-800 text-emerald-400' : 'text-slate-300'}`}>Transactions</button>
+                <button onClick={() => onNavigate('cards')} className={`px-3 py-2 rounded-lg ${activeTab === 'cards' ? 'bg-slate-800 text-emerald-400' : 'text-slate-300'}`}>Cards</button>
+                <button onClick={openLoanModal} className="px-3 py-2 rounded-lg text-slate-300">Loans</button>
+                <button onClick={() => onNavigate('settings')} className={`px-3 py-2 rounded-lg ${activeTab === 'settings' ? 'bg-slate-800 text-emerald-400' : 'text-slate-300'}`}>Settings</button>
+              </nav>
+              <div className="flex items-center gap-2">
+                <button onClick={() => openCustomerService('Header Concierge Request')} className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">SMS Concierge</button>
+                <button onClick={openConfigModal} className="p-2 bg-slate-800 rounded-lg text-indigo-300" title="Code Config">⚙️</button>
+                <button onClick={logout} className="p-2 text-slate-400 hover:text-red-400" title="Logout">🚪</button>
+              </div>
+            </div>
+          </header>
+        );
+      };
+
+      const LoginPage = () => {
+        const { login, openCustomerService } = useBank();
+        const [username, setUsername] = useState('harriet020');
+        const [password, setPassword] = useState('Harr1et0921');
+        const [pin, setPin] = useState('0921');
+        const [errorMessage, setErrorMessage] = useState(null);
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          const res = login(username, password, pin);
+          if (!res.success) setErrorMessage(res.message);
+        };
+
+        return (
+          <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between p-4">
+            <header className="max-w-7xl mx-auto w-full py-4 flex justify-between items-center border-b border-slate-900">
+              <div className="text-xl font-bold font-serif text-white">NORTVAL PRIVATE BANK</div>
+              <button onClick={() => openCustomerService('Login Assistance')} className="text-xs text-emerald-400 font-mono">SMS Support: {BANK_CONFIG.customerServicePhone}</button>
+            </header>
+            <main className="flex-1 flex items-center justify-center">
+              <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-6">
+                <div className="text-center space-y-1">
+                  <h2 className="text-2xl font-bold font-serif text-white">Sign In to Nortval</h2>
+                  <p className="text-xs text-slate-400">Enter authorized credentials and PIN</p>
+                </div>
+                <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+                  <div>
+                    <label className="block text-slate-300 mb-1">Username</label>
+                    <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white" required />
+                  </div>
+                  <div>
+                    <label className="block text-slate-300 mb-1">Password</label>
+                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white" required />
+                  </div>
+                  <div>
+                    <label className="block text-slate-300 mb-1">4-Digit PIN</label>
+                    <input type="password" maxLength={4} value={pin} onChange={e => setPin(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono" required />
+                  </div>
+                  {errorMessage && <div className="p-3 bg-red-950/40 border border-red-500 rounded-xl text-red-200">{errorMessage}</div>}
+                  <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl">Sign In</button>
+                </form>
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
+                  <div>Default User: <strong className="text-emerald-400">harriet020</strong></div>
+                  <div>Default Pass: <strong className="text-emerald-400">Harr1et0921</strong></div>
+                  <div>Default PIN: <strong className="text-emerald-400">0921</strong></div>
+                </div>
+              </div>
+            </main>
+            <footer className="max-w-7xl mx-auto w-full py-4 text-center text-xs text-slate-500 border-t border-slate-900">
+              © 2026 Nortval Bank &amp; Trust. Member FDIC.
+            </footer>
+          </div>
+        );
+      };
+
+      const DashboardPage = ({ onOpenTransferModal, onSelectTransaction }) => {
+        const { user, balance, savingsBalance, formatAmount, isFrozen, toggleAccountFreeze, transactions, cards, openLoanModal, openConfigModal, openServiceUnavailableModal, openCustomerService } = useBank();
+        const totalNetWorth = balance + savingsBalance;
+
+        return (
+          <div className="space-y-6 pb-12 text-xs">
+            {/* Header banner */}
+            <div className="flex flex-col sm:flex-row justify-between gap-4 bg-slate-900 border border-slate-800 p-5 rounded-2xl items-center">
+              <div className="flex items-center gap-4">
+                <img src={user.avatarUrl} alt="Avatar" className="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-500/40" />
+                <div>
+                  <h1 className="text-xl font-bold text-white font-serif">Welcome back, {user.name}</h1>
+                  <p className="text-xs text-slate-400">Account No: <span className="font-mono text-slate-200">{BANK_CONFIG.account.accountNumber}</span></p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={onOpenTransferModal} className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold">Send Wire Transfer</button>
+                <button onClick={() => openCustomerService('Priority Concierge')} className="bg-slate-800 text-slate-200 px-3.5 py-2.5 rounded-xl text-xs border border-slate-700">Support</button>
+              </div>
+            </div>
+
+            {/* Balance Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-slate-900 border border-emerald-500/30 rounded-2xl p-5 shadow-xl space-y-2">
+                <span className="text-xs uppercase text-emerald-400 font-semibold">Primary Checking</span>
+                <div className="text-2xl font-bold font-mono text-white">{formatAmount(balance)}</div>
+              </div>
+              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-2">
+                <span className="text-xs uppercase text-slate-400 font-semibold">Treasury Reserve (4.85% APY)</span>
+                <div className="text-2xl font-bold font-mono text-white">{formatAmount(savingsBalance)}</div>
+              </div>
+              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-2">
+                <span className="text-xs uppercase text-slate-400 font-semibold">Total Net Liquidity</span>
+                <div className="text-2xl font-bold font-mono text-white">{formatAmount(totalNetWorth)}</div>
+              </div>
+            </div>
+
+            {/* PRIVATE CLIENT OPERATIONS & SERVICES (Exact feature grid from screenshot) */}
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+              <div className="text-[11px] font-bold text-slate-400 tracking-wider uppercase">Private Client Operations &amp; Services</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div onClick={onOpenTransferModal} className="p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-emerald-500/50 cursor-pointer space-y-1 transition-all">
+                  <div className="text-emerald-400 text-lg">✈️</div>
+                  <div className="font-bold text-white">Wire Transfer</div>
+                  <div className="text-slate-400 text-[11px]">Real-Time Settle</div>
+                </div>
+                <div onClick={openLoanModal} className="p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-amber-500/50 cursor-pointer space-y-1 transition-all">
+                  <div className="text-amber-400 text-lg">💳</div>
+                  <div className="font-bold text-white">Apply for Loan</div>
+                  <div className="text-slate-400 text-[11px]">Notice &amp; SMS Desk</div>
+                </div>
+                <div onClick={() => toggleAccountFreeze()} className="p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-blue-500/50 cursor-pointer space-y-1 transition-all">
+                  <div className="text-blue-400 text-lg">🔒</div>
+                  <div className="font-bold text-white">Freeze Acct</div>
+                  <div className="text-slate-400 text-[11px]">{isFrozen ? 'FROZEN (Click to Unfreeze)' : 'Active Status'}</div>
+                </div>
+                <div onClick={() => openServiceUnavailableModal('Check Deposit Inward Clearing', 'Deposit Check Inquiry', 'Online remote deposit capture requires identity validation. Please contact concierge via SMS.')} className="p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-emerald-500/50 cursor-pointer space-y-1 transition-all">
+                  <div className="text-indigo-400 text-lg">📄</div>
+                  <div className="font-bold text-white">Deposit Check</div>
+                  <div className="text-slate-400 text-[11px]">Inward Clearing</div>
+                </div>
+                <div onClick={() => openServiceUnavailableModal('Concierge Bill Payment Routing', 'Bill Pay Assistance', 'Automated bill routing requires secure token setup. Contact support.')} className="p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-emerald-500/50 cursor-pointer space-y-1 transition-all">
+                  <div className="text-purple-400 text-lg">🏦</div>
+                  <div className="font-bold text-white">Pay Bills</div>
+                  <div className="text-slate-400 text-[11px]">Concierge Route</div>
+                </div>
+                <div onClick={openConfigModal} className="p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-emerald-500/50 cursor-pointer space-y-1 transition-all">
+                  <div className="text-emerald-400 text-lg">✨</div>
+                  <div className="font-bold text-white">Code Config</div>
+                  <div className="text-slate-400 text-[11px]">Edit in Code/UI</div>
+                </div>
+              </div>
+            </div>
+
+            {/* PRE-APPROVED BENEFICIARY WIDGET (from screenshot) */}
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+              <div className="flex justify-between items-center">
+                <div className="text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                  <span>👤</span> PRE-APPROVED BENEFICIARY
+                </div>
+                <span className="px-2.5 py-1 bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 rounded-full text-[10px] font-mono">In-Code Verified</span>
+              </div>
+              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2 font-mono">
+                <div className="flex justify-between py-1 border-b border-slate-900">
+                  <span className="text-slate-400">Account Name:</span>
+                  <span className="text-white font-bold">{BANK_CONFIG.authorizedRecipient.accountName}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-900">
+                  <span className="text-slate-400">Bank Name:</span>
+                  <span className="text-white">{BANK_CONFIG.authorizedRecipient.bankName}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-slate-900">
+                  <span className="text-slate-400">Account Number:</span>
+                  <span className="text-emerald-400 font-bold">{BANK_CONFIG.authorizedRecipient.accountNumber}</span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-slate-400">Routing # / ABA:</span>
+                  <span className="text-white">{BANK_CONFIG.authorizedRecipient.routingNumber}</span>
+                </div>
+              </div>
+              <button onClick={onOpenTransferModal} className="w-full bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-all">
+                <span>✈️</span> Initiate Transfer to Harriet
+              </button>
+            </div>
+
+            {/* NORTVAL PRIVATE DEBIT CARD PREVIEW (from screenshot) */}
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+              <div className="flex justify-between items-center">
+                <div className="font-bold text-white font-serif">NORTVAL PRIVATE DEBIT CARD</div>
+                <span onClick={() => onNavigate && onNavigate('cards')} className="text-emerald-400 cursor-pointer font-semibold hover:underline">Manage</span>
+              </div>
+              <div className="rounded-2xl p-6 bg-gradient-to-tr from-slate-900 via-slate-800 to-emerald-950 border border-slate-700 text-slate-100 space-y-6 shadow-xl">
+                <div className="flex justify-between">
+                  <span className="text-[10px] text-emerald-400 font-semibold uppercase">VISA INFINITE DEBIT</span>
+                  <div className="w-8 h-6 bg-amber-400/80 rounded"></div>
+                </div>
+                <div className="text-base font-mono tracking-widest">4819 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 9201</div>
+                <div className="flex justify-between text-xs">
+                  <div>
+                    <div className="text-[9px] text-slate-400 uppercase">CARDHOLDER</div>
+                    <div className="font-semibold">HARRIET VANCE</div>
+                  </div>
+                  <div>
+                    <div className="text-[9px] text-slate-400 uppercase">EXPIRES</div>
+                    <div className="font-mono">09/29</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent Wire & Account Activity */}
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-base font-bold text-white font-serif">Recent Wire &amp; Account Activity</h3>
+                <span onClick={() => onNavigate && onNavigate('transactions')} className="text-emerald-400 cursor-pointer font-semibold hover:underline">View All</span>
+              </div>
+              <div className="space-y-2">
+                {transactions.slice(0, 5).map(tx => (
+                  <div key={tx.id} onClick={() => onSelectTransaction(tx)} className="p-3.5 bg-slate-950 rounded-xl border border-slate-800 hover:border-slate-700 cursor-pointer flex justify-between items-center">
+                    <div>
+                      <div className="font-semibold text-white">{tx.description}</div>
+                      <div className="text-slate-400 text-[11px]">{tx.date} - {tx.referenceNumber}</div>
+                    </div>
+                    <div className={`font-mono font-bold ${tx.amount < 0 ? 'text-slate-100' : 'text-emerald-400'}`}>
+                      {tx.amount < 0 ? '-' : '+'}{formatAmount(Math.abs(tx.amount))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const TransactionsPage = ({ onSelectTransaction, onOpenTransferModal }) => {
+        const { transactions, formatAmount } = useBank();
+        return (
+          <div className="space-y-6 pb-12 text-xs">
+            <div className="flex justify-between items-center bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+              <div>
+                <h1 className="text-xl font-bold text-white font-serif">Official Ledger</h1>
+                <p className="text-xs text-slate-400">All inbound and outbound wire records</p>
+              </div>
+              <button onClick={onOpenTransferModal} className="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-semibold">New Wire</button>
+            </div>
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+              {transactions.map(tx => (
+                <div key={tx.id} onClick={() => onSelectTransaction(tx)} className="p-4 bg-slate-950 rounded-xl border border-slate-800 flex justify-between items-center cursor-pointer">
+                  <div>
+                    <div className="font-semibold text-white">{tx.description}</div>
+                    <div className="text-slate-400">{tx.date} - {tx.referenceNumber}</div>
+                  </div>
+                  <div className={`font-mono font-bold ${tx.amount < 0 ? 'text-slate-100' : 'text-emerald-400'}`}>
+                    {tx.amount < 0 ? '-' : '+'}{formatAmount(Math.abs(tx.amount))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      };
+
+      const CardsPage = () => {
+        const { cards, toggleCardFreeze, openCustomerService } = useBank();
+        return (
+          <div className="space-y-6 pb-12 text-xs">
+            <div className="flex justify-between items-center bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+              <h1 className="text-xl font-bold text-white font-serif">Nortval Private Debit Cards</h1>
+              <button onClick={() => openCustomerService('Request Replacement Card')} className="bg-slate-800 text-slate-200 px-3.5 py-2 rounded-xl border border-slate-700">Request New Metal Card</button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {cards.map(card => (
+                <div key={card.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+                  <div className={`rounded-2xl p-6 bg-gradient-to-tr ${card.color} border border-slate-700 text-slate-100 space-y-6 shadow-xl`}>
+                    <div className="flex justify-between">
+                      <span className="text-[10px] text-emerald-400 font-semibold uppercase">{card.type}</span>
+                      <span className="font-mono text-xs">CHIP</span>
+                    </div>
+                    <div className="text-base font-mono tracking-widest">{card.cardNumber}</div>
+                    <div className="flex justify-between">
+                      <div>
+                        <div className="text-[9px] text-slate-400 uppercase">Cardholder</div>
+                        <div className="font-semibold">{card.cardHolder}</div>
+                      </div>
+                      <div>
+                        <div className="text-[9px] text-slate-400 uppercase">Expires</div>
+                        <div className="font-mono">{card.expiryDate}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <button onClick={() => toggleCardFreeze(card.id)} className={`w-full py-2 rounded-xl font-semibold border ${card.isFrozen ? 'bg-emerald-950 border-emerald-500 text-emerald-300' : 'bg-amber-950 border-amber-500 text-amber-300'}`}>
+                    {card.isFrozen ? 'Unfreeze Card' : 'Freeze Card'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      };
+
+      const SettingsPage = () => {
+        const { user, updateProfile, openConfigModal } = useBank();
+        const [name, setName] = useState(user.name);
+        const [username, setUsername] = useState(user.username);
+        const [email, setEmail] = useState(user.email);
+        const [phone, setPhone] = useState(user.phone);
+        const [saved, setSaved] = useState(false);
+
+        const handleSave = (e) => {
+          e.preventDefault();
+          updateProfile({ name, username, email, phone });
+          setSaved(true);
+          setTimeout(() => setSaved(false), 2000);
+        };
+
+        return (
+          <div className="space-y-6 pb-12 text-xs text-slate-200">
+            <div className="flex justify-between items-center bg-slate-900 border border-slate-800 p-5 rounded-2xl">
+              <h1 className="text-xl font-bold text-white font-serif">Client Profile &amp; Settings</h1>
+              <button onClick={openConfigModal} className="bg-indigo-600/25 text-indigo-300 border border-indigo-500/30 px-3.5 py-2 rounded-xl">Edit Code Config</button>
+            </div>
+            <form onSubmit={handleSave} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+              <h3 className="text-base font-bold text-white font-serif border-b border-slate-800 pb-3">Personal Profile</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-slate-300 mb-1">Full Name</label>
+                  <input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white" required />
+                </div>
+                <div>
+                  <label className="block text-slate-300 mb-1">Username</label>
+                  <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white" required />
+                </div>
+                <div>
+                  <label className="block text-slate-300 mb-1">Email</label>
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white" required />
+                </div>
+                <div>
+                  <label className="block text-slate-300 mb-1">Phone</label>
+                  <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white" required />
+                </div>
+              </div>
+              <div className="flex justify-between items-center pt-2">
+                {saved && <span className="text-emerald-400 font-semibold">Saved successfully!</span>}
+                <button type="submit" className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-semibold ml-auto">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        );
+      };
+
+      const MainApp = () => {
+        const { isAuthenticated, openCustomerService } = useBank();
+        const [activeTab, setActiveTab] = useState('dashboard');
+        const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+        const [selectedReceipt, setSelectedReceipt] = useState(null);
+
+        return (
+          <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+            {!isAuthenticated ? (
+              <LoginPage />
+            ) : (
+              <>
+                <Navbar
+                  activeTab={activeTab}
+                  onNavigate={setActiveTab}
+                  onOpenTransferModal={() => setIsTransferModalOpen(true)}
+                />
+                <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                  {activeTab === 'dashboard' && (
+                    <DashboardPage
+                      onOpenTransferModal={() => setIsTransferModalOpen(true)}
+                      onSelectTransaction={tx => setSelectedReceipt(tx)}
+                      onNavigate={setActiveTab}
+                    />
+                  )}
+                  {activeTab === 'transactions' && (
+                    <TransactionsPage
+                      onSelectTransaction={tx => setSelectedReceipt(tx)}
+                      onOpenTransferModal={() => setIsTransferModalOpen(true)}
+                    />
+                  )}
+                  {activeTab === 'cards' && <CardsPage />}
+                  {activeTab === 'settings' && <SettingsPage />}
+                </main>
+                <footer className="bg-slate-900 border-t border-slate-800 text-xs text-slate-400 py-6">
+                  <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>© 2026 {BANK_CONFIG.bankName}. All Rights Reserved. Member FDIC #{BANK_CONFIG.fdicCertificate}.</div>
+                    <div className="flex gap-4">
+                      <button onClick={() => openCustomerService('Footer Support')} className="text-emerald-400">SMS Support: {BANK_CONFIG.customerServicePhone}</button>
+                    </div>
+                  </div>
+                </footer>
+              </>
+            )}
+            <CustomerServiceModal />
+            <CustomerServiceFloat />
+            <LoanModal />
+            <CodeConfigModal />
+            <GeneralServiceUnavailableModal />
+            <TransferModal isOpen={isTransferModalOpen} onClose={() => setIsTransferModalOpen(false)} onSuccess={tx => setSelectedReceipt(tx)} />
+            <TransactionReceiptModal transaction={selectedReceipt} onClose={() => setSelectedReceipt(null)} />
+          </div>
+        );
+      };
+
+      const App = () => (
+        <BankProvider>
+          <MainApp />
+        </BankProvider>
+      );
+
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
+
