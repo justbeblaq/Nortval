@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NORTVAL PRIVATE BANK - Secure Banking Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect href="https://fonts.googleapis.com">
-  <link rel="preconnect href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   
   <script>
@@ -124,8 +124,8 @@
         <p class="text-[10px] sm:text-xs text-gray-400 font-medium tracking-widest uppercase">EST. 1894 • FDIC INSURED</p>
       </div>
     </div>
-    <div id="header-right-actions" class="flex items-center space-x-3">
-      <button id="settings-btn" onclick="openSettingsPage()" class="hidden p-2.5 rounded-xl bg-brand-navyCard border border-gray-700/60 text-gray-300 hover:text-emerald-400 hover:border-emerald-500/50 transition duration-200 focus:outline-none" title="Account Settings">
+    <div id="header-right-actions" class="hidden flex items-center space-x-3">
+      <button id="settings-btn" onclick="openSettingsPage()" class="p-2.5 rounded-xl bg-brand-navyCard border border-gray-700/60 text-gray-300 hover:text-emerald-400 hover:border-emerald-500/50 transition duration-200 focus:outline-none" title="Account Settings">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -137,7 +137,7 @@
   <!-- MAIN CONTENT */
   <main class="flex-grow flex items-center justify-center p-4 sm:p-6 max-w-4xl mx-auto w-full">
 
-    <!-- LOGIN SCREEN -->
+    <!-- LOGIN SCREEN - EMPTY FIELDS */
     <div id="screen-login" class="fade-in w-full max-w-md bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl my-auto">
       <div class="text-center mb-8">
         <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white mb-2">Private Client Login</h2>
@@ -150,12 +150,12 @@
       <form onsubmit="handleInitialLogin(event)" class="space-y-5">
         <div>
           <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">Username</label>
-          <input type="text" id="input-username" value="harriet020" required class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+          <input type="text" id="input-username" value="" required class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition text-sm">
         </div>
 
         <div>
           <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">Password</label>
-          <input type="password" id="input-password" value="Harr1et0921" required class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+          <input type="password" id="input-password" value="" required class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition text-sm">
         </div>
 
         <button type="submit" class="w-full mt-2 bg-brand-green hover:bg-brand-greenHover text-gray-950 font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-lg shadow-emerald-900/30 text-sm tracking-wide">
@@ -168,7 +168,7 @@
       </div>
     </div>
 
-    <!-- PIN SCREEN -->
+    <!-- PIN SCREEN */
     <div id="screen-pin" class="hidden fade-in w-full max-w-md bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl my-auto">
       <div class="text-center mb-8">
         <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-500/10 flex items-center justify-center">
@@ -205,10 +205,10 @@
       <p class="text-xs text-gray-500 text-center mt-6">For security, this session will timeout after 15 minutes of inactivity</p>
     </div>
 
-    <!-- DASHBOARD -->
+    <!-- DASHBOARD */
     <div id="screen-dashboard" class="hidden fade-in w-full max-w-6xl mx-auto">
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <!-- SIDEBAR NAVIGATION */
+        <!-- SIDEBAR NAVIGATION -->
         <div class="lg:col-span-1 bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
           <div class="mb-6">
             <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Welcome</p>
@@ -253,9 +253,9 @@
           </div>
         </div>
 
-        <!-- MAIN CONTENT AREA */
+        <!-- MAIN CONTENT AREA -->
         <div class="lg:col-span-3 space-y-6">
-          <!-- OVERVIEW SECTION */
+          <!-- OVERVIEW SECTION -->
           <div id="section-overview" class="block">
             <div class="balance-display">
               <p class="text-emerald-100 text-sm mb-1">Total Available Balance</p>
@@ -279,98 +279,280 @@
                   <div>
                     <p class="text-white font-medium">Wire Transfer - JPMorgan Chase</p>
                     <p class="text-xs text-gray-400">Dec 20, 2024</p>
+                  </div>
+                  <p class="text-green-400 font-bold">+$5,000.00</p>
                 </div>
-                <p class="text-green-400 font-bold">+$5,000.00</p>
-              </div>
-              <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                <div>
-                  <p class="text-white font-medium">Direct Deposit - Payroll</p>
-                  <p class="text-xs text-gray-400">Dec 15, 2024</p>
+                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
+                  <div>
+                    <p class="text-white font-medium">Direct Deposit - Payroll</p>
+                    <p class="text-xs text-gray-400">Dec 15, 2024</p>
+                  </div>
+                  <p class="text-green-400 font-bold">+$8,500.00</p>
                 </div>
-                <p class="text-green-400 font-bold">+$8,500.00</p>
-              </div>
-              <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                <div>
-                  <p class="text-white font-medium">ATM Withdrawal</p>
-                  <p class="text-xs text-gray-400">Dec 10, 2024</p>
+                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
+                  <div>
+                    <p class="text-white font-medium">ATM Withdrawal</p>
+                    <p class="text-xs text-gray-400">Dec 10, 2024</p>
+                  </div>
+                  <p class="text-red-400 font-bold">-$500.00</p>
                 </div>
-                <p class="text-red-400 font-bold">-$500.00</p>
-              </div>
-            </div>
-
-            <div class="mt-6 text-center">
-              <button onclick="showSection('transactions')" class="text-emerald-400 hover:text-emerald-300 text-sm font-medium">View All Transactions →</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- TRANSFER SECTION */
-        <div id="section-transfer" class="hidden">
-          <div class="bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
-            <h3 class="text-xl font-bold text-white mb-6">Transfer Funds</h3>
-            
-            <form onsubmit="handleTransfer(event)" class="space-y-4">
-              <div>
-                <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">From Account</label>
-                <select class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
-                  <option>Checking ****7740 - $50,000.00</option>
-                  <option>Savings ****7740 - $125,000.00</option>
-                </select>
               </div>
 
-              <div>
-                <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">To Account</label>
-                <input type="text" value="JPMorgan Chase Bank" readonly class="w-full bg-gray-800 border border-gray-700/70 rounded-xl px-4 py-3 text-gray-400 cursor-not-allowed">
-              </div>
-
-              <div>
-                <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">Amount</label>
-                <input type="number" id="transfer-amount" placeholder="$0.00" class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
-              </div>
-
-              <button type="submit" class="w-full bg-brand-green hover:bg-brand-greenHover text-gray-950 font-bold py-3 px-4 rounded-xl transition">
-                Transfer Funds
-              </button>
-            </form>
-
-            <div class="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-              <p class="text-xs text-emerald-400">✓ All transfers are protected by federal law and encrypted with 256-bit security</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- TRANSACTIONS SECTION */
-        <div id="section-transactions" class="hidden">
-          <div class="bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
-            <h3 class="text-xl font-bold text-white mb-6">Transaction History</h3>
-            <p class="text-gray-400 text-sm mb-4">Showing all transactions for the past 90 days</p>
-            
-            <div class="space-y-3">
-              <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                <div>
-                  <p class="text-white font-medium">Wire Transfer - JPMorgan Chase</p>
-                  <p class="text-xs text-gray-400">Dec 20, 2024</p>
-                </div>
-                <p class="text-green-400 font-bold">+$5,000.00</p>
-              </div>
-              <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                <div>
-                  <p class="text-white font-medium">Direct Deposit - Payroll</p>
-                  <p class="text-xs text-gray-400">Dec 15, 2024</p>
-                </div>
-                <p class="text-green-400 font-bold">+$8,500.00</p>
-              </div>
-              <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                <div>
-                  <p class="text-white font-medium">ATM Withdrawal</p>
-                  <p class="text-xs text-gray-400">Dec 10, 2024</p>
-                </div>
-                <p class="text-red-400 font-bold">-$500.00</p>
+              <div class="mt-6 text-center">
+                <button onclick="showSection('transactions')" class="text-emerald-400 hover:text-emerald-300 text-sm font-medium">View All Transactions →</button>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- ACCOUNT DETAILS SECTION */
-        <div id="section-account-details" class="hidden">
-          <div class
+          <!-- TRANSFER SECTION -->
+          <div id="section-transfer" class="hidden">
+            <div class="bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
+              <h3 class="text-xl font-bold text-white mb-6">Transfer Funds</h3>
+              
+              <form onsubmit="handleTransfer(event)" class="space-y-4">
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">From Account</label>
+                  <select class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
+                    <option>Checking ****7740 - $50,000.00</option>
+                    <option>Savings ****7740 - $125,000.00</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">To Account</label>
+                  <input type="text" value="JPMorgan Chase Bank" readonly class="w-full bg-gray-800 border border-gray-700/70 rounded-xl px-4 py-3 text-gray-400 cursor-not-allowed">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">Amount</label>
+                  <input type="number" id="transfer-amount" placeholder="$0.00" class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
+                </div>
+
+                <button type="submit" class="w-full bg-brand-green hover:bg-brand-greenHover text-gray-950 font-bold py-3 px-4 rounded-xl transition">
+                  Transfer Funds
+                </button>
+              </form>
+
+              <div class="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                <p class="text-xs text-emerald-400">✓ All transfers are protected by federal law and encrypted with 256-bit security</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- TRANSACTIONS SECTION -->
+          <div id="section-transactions" class="hidden">
+            <div class="bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
+              <h3 class="text-xl font-bold text-white mb-6">Transaction History</h3>
+              <p class="text-gray-400 text-sm mb-4">Showing all transactions for the past 90 days</p>
+              
+              <div class="space-y-3">
+                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
+                  <div>
+                    <p class="text-white font-medium">Wire Transfer - JPMorgan Chase</p>
+                    <p class="text-xs text-gray-400">Dec 20, 2024</p>
+                  </div>
+                  <p class="text-green-400 font-bold">+$5,000.00</p>
+                </div>
+                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
+                  <div>
+                    <p class="text-white font-medium">Direct Deposit - Payroll</p>
+                    <p class="text-xs text-gray-400">Dec 15, 2024</p>
+                  </div>
+                  <p class="text-green-400 font-bold">+$8,500.00</p>
+                </div>
+                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
+                  <div>
+                    <p class="text-white font-medium">ATM Withdrawal</p>
+                    <p class="text-xs text-gray-400">Dec 10, 2024</p>
+                  </div>
+                  <p class="text-red-400 font-bold">-$500.00</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACCOUNT DETAILS SECTION -->
+          <div id="section-account-details" class="hidden">
+            <div class="bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
+              <h3 class="text-xl font-bold text-white mb-6">Account Details</h3>
+              
+              <div class="space-y-4">
+                <div class="p-4 bg-gray-800/50 rounded-lg">
+                  <p class="text-xs text-gray-400 mb-1">Account Holder</p>
+                  <p class="text-white font-bold">Harriet Vance</p>
+                </div>
+                <div class="p-4 bg-gray-800/50 rounded-lg">
+                  <p class="text-xs text-gray-400 mb-1">Account Number</p>
+                  <p class="text-white font-bold">4810-9281-7740</p>
+                </div>
+                <div class="p-4 bg-gray-800/50 rounded-lg">
+                  <p class="text-xs text-gray-400 mb-1">Routing Number</p>
+                  <p class="text-white font-bold">071101928</p>
+                </div>
+                <div class="p-4 bg-gray-800/50 rounded-lg">
+                  <p class="text-xs text-gray-400 mb-1">SWIFT Code</p>
+                  <p class="text-white font-bold">NRTVUS33XXX</p>
+                </div>
+                <div class="p-4 bg-gray-800/50 rounded-lg">
+                  <p class="text-xs text-gray-400 mb-1">FDIC Certificate</p>
+                  <p class="text-white font-bold">FDIC-491028-A</p>
+                </div>
+              </div>
+
+              <div class="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                <p class="text-xs text-emerald-400">✓ Your account is protected by federal law and FDIC insurance</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER */
+  <footer class="w-full bg-[#080d1a] border-t border-gray-800/60 px-4 py-6 text-center">
+    <p class="text-xs text-gray-500">© 2024 NORTVAL Private Bank. All rights reserved.</p>
+    <p class="text-xs text-gray-500 mt-2">NORTVAL is a fictional bank for demonstration purposes only.</p>
+    <p class="text-xs text-gray-500 mt-2">FDIC Insurance: Your deposits are protected by federal law up to $250,000.</p>
+  </footer>
+
+  <!-- SECURITY SCRIPT */
+  <script>
+    // SECURITY & AUTHENTICATION
+    const CORRECT_USERNAME = 'harriet020';
+    const CORRECT_PASSWORD = 'Harr1et0921';
+    const CORRECT_PIN = '0921';
+    
+    let pinInput = '';
+    let loginAttempts = 0;
+    const MAX_LOGIN_ATTEMPTS = 3;
+
+    // Check if user is already logged in
+    function checkAuth() {
+      const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+      if (isLoggedIn === 'true') {
+        goToDashboard();
+      }
+    }
+
+    // Handle initial login (username/password)
+    function handleInitialLogin(event) {
+      event.preventDefault();
+      
+      const username = document.getElementById('input-username').value;
+      const password = document.getElementById('input-password').value;
+      
+      // Check credentials
+      if (username !== CORRECT_USERNAME || password !== CORRECT_PASSWORD) {
+        loginAttempts++;
+        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+          alert('Maximum login attempts reached. Account temporarily locked.');
+          return;
+        }
+        alert('Invalid credentials. ' + (MAX_LOGIN_ATTEMPTS - loginAttempts) + ' attempts remaining.');
+        return;
+      }
+      
+      // Credentials correct, proceed to PIN
+      document.getElementById('screen-login').classList.add('hidden');
+      document.getElementById('screen-pin').classList.remove('hidden');
+    }
+
+    // PIN functions
+    function enterPin(digit) {
+      if (pinInput.length < 4) {
+        pinInput += digit;
+        updatePinDisplay();
+        
+        if (pinInput.length === 4) {
+          setTimeout(() => submitPin(), 300);
+        }
+      }
+    }
+
+    function updatePinDisplay() {
+      for (let i = 0; i < 4; i++) {
+        const dot = document.getElementById('pin-dot-' + (i + 1));
+        if (i < pinInput.length) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      }
+    }
+
+    function clearPin() {
+      pinInput = '';
+      updatePinDisplay();
+    }
+
+    function submitPin() {
+      if (pinInput === CORRECT_PIN) {
+        // PIN correct, log in user
+        sessionStorage.setItem('isLoggedIn', 'true');
+        goToDashboard();
+      } else {
+        alert('Incorrect PIN. Please try again.');
+        clearPin();
+      }
+    }
+
+    // Go to dashboard
+    function goToDashboard() {
+      document.getElementById('screen-login').classList.add('hidden');
+      document.getElementById('screen-pin').classList.add('hidden');
+      document.getElementById('screen-dashboard').classList.remove('hidden');
+      document.getElementById('header-right-actions').classList.remove('hidden');
+      showSection('overview');
+    }
+
+    // Show/hide sections
+    function showSection(sectionName) {
+      // Hide all sections
+      const sections = ['overview', 'transfer', 'transactions', 'account-details', 'settings'];
+      sections.forEach(section => {
+        const element = document.getElementById('section-' + section);
+        if (element) {
+          element.classList.add('hidden');
+        }
+      });
+      
+      // Show requested section
+      const targetSection = document.getElementById('section-' + sectionName);
+      if (targetSection) {
+        targetSection.classList.remove('hidden');
+      }
+      
+      // Update nav state
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+    }
+
+    // Logout
+    function logout() {
+      sessionStorage.removeItem('isLoggedIn');
+      pinInput = '';
+      loginAttempts = 0;
+      document.getElementById('screen-dashboard').classList.add('hidden');
+      document.getElementById('screen-login').classList.remove('hidden');
+      document.getElementById('header-right-actions').classList.add('hidden');
+    }
+
+    // Handle transfer
+    function handleTransfer(event) {
+      event.preventDefault();
+      alert('Transfer functionality would be implemented here. This is a front-end demo only.');
+    }
+
+    // Open settings
+    function openSettingsPage() {
+      alert('Settings page would open here. This is a front-end demo only.');
+    }
+
+    // Check auth on load
+    checkAuth();
+  </script>
+</body>
+</html>
