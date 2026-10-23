@@ -1,10 +1,13 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NORTVAL PRIVATE BANK - Secure Banking Portal</title>
+  <title>NORTVAL PRIVATE BANK</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -15,14 +18,18 @@
         extend: {
           colors: {
             brand: {
-              navyDark: '#080d1a',
-              navyCard: '#11192e',
-              navyInput: '#18223c',
+              navyDark: '#080f1e',
+              navyCard: '#10192d',
+              navyInput: '#18243e',
               green: '#10b981',
               greenHover: '#059669',
               greenBright: '#00e676',
               accentRed: '#ef4444'
             }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif']
           }
         }
       }
@@ -31,7 +38,7 @@
 
   <style>
     body {
-      background-color: #080d1a;
+      background-color: #080f1e;
       color: #f3f4f6;
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
@@ -39,6 +46,7 @@
       user-select: none;
     }
 
+    /* Animations */
     .fade-in {
       animation: fadeIn 0.35s ease-in-out forwards;
     }
@@ -48,10 +56,11 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Custom Loader Spinner */
     .spinner {
       border: 3px solid rgba(255, 255, 255, 0.1);
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       border-left-color: #10b981;
       animation: spin 0.8s linear infinite;
@@ -62,59 +71,25 @@
       100% { transform: rotate(360deg); }
     }
 
-    .pin-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 2px solid #374151;
-      transition: all 0.2s ease;
+    /* Clean PIN Input Styling */
+    .pin-input {
+      letter-spacing: 0.6em;
+      font-size: 1.5rem;
+      text-align: center;
     }
-
-    .pin-dot.active {
-      background-color: #10b981;
-      border-color: #10b981;
-      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
-    }
-
-    .transaction-item {
-      transition: all 0.2s ease;
-    }
-
-    .transaction-item:hover {
-      background-color: rgba(16, 185, 129, 0.05);
-      transform: translateX(5px);
-    }
-
-    .balance-display {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
-    }
-
-    .nav-item {
-      transition: all 0.2s ease;
-    }
-
-    .nav-item:hover {
-      background-color: rgba(16, 185, 129, 0.1);
-      color: #10b981;
-    }
-
-    .nav-item.active {
-      background-color: rgba(16, 185, 129, 0.15);
-      color: #10b981;
-      border-left: 3px solid #10b981;
+    .pin-input::placeholder {
+      letter-spacing: 0.4em;
+      opacity: 0.4;
     }
   </style>
 </head>
 <body class="flex flex-col min-h-screen relative overflow-x-hidden">
 
-  <!-- HEADER */
-  <header class="w-full bg-[#080d1a]/90 backdrop-blur-md sticky top-0 z-40 border-b border-gray-800/60 px-4 py-3.5 sm:px-8 flex items-center justify-between">
-    <div class="flex items-center space-x-3 cursor-pointer" onclick="goToDashboard()">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+  <!-- ================= TOP HEADER NAVIGATION ================= -->
+  <header class="w-full bg-[#080f1e]/95 backdrop-blur-md sticky top-0 z-40 border-b border-gray-800/60 px-4 py-3.5 sm:px-8 flex items-center justify-between">
+    <div class="flex items-center space-x-3 cursor-pointer" onclick="goToDashboardIfLoggedIn()">
+      <!-- Bank Emblem SVG -->
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-md">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
         </svg>
@@ -124,8 +99,11 @@
         <p class="text-[10px] sm:text-xs text-gray-400 font-medium tracking-widest uppercase">EST. 1894 • FDIC INSURED</p>
       </div>
     </div>
-    <div id="header-right-actions" class="hidden flex items-center space-x-3">
-      <button id="settings-btn" onclick="openSettingsPage()" class="p-2.5 rounded-xl bg-brand-navyCard border border-gray-700/60 text-gray-300 hover:text-emerald-400 hover:border-emerald-500/50 transition duration-200 focus:outline-none" title="Account Settings">
+
+    <!-- Right Header Actions (Clean, Top Numbers Removed) -->
+    <div id="header-right-actions" class="flex items-center space-x-3">
+      <!-- Settings Icon Button (Professional Sketch/Vector Line Icon) -->
+      <button id="settings-btn" onclick="openSettingsPage()" class="hidden p-2.5 rounded-xl bg-brand-navyCard border border-gray-700/60 text-gray-300 hover:text-emerald-400 hover:border-emerald-500/50 transition duration-200 focus:outline-none" title="Account Settings">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -134,425 +112,231 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT */
+  <!-- ================= MAIN CONTENT CONTAINER ================= -->
   <main class="flex-grow flex items-center justify-center p-4 sm:p-6 max-w-4xl mx-auto w-full">
 
-    <!-- LOGIN SCREEN - EMPTY FIELDS */
+    <!-- STEP 1: LOGIN SCREEN -->
     <div id="screen-login" class="fade-in w-full max-w-md bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl my-auto">
       <div class="text-center mb-8">
         <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white mb-2">Private Client Login</h2>
         <p class="text-xs sm:text-sm text-gray-400">Enter authorized credentials to continue</p>
-        <div class="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-          <p class="text-xs text-emerald-400">✓ FDIC Protected • 256-bit Encryption • Secure Login</p>
-        </div>
       </div>
 
       <form onsubmit="handleInitialLogin(event)" class="space-y-5">
         <div>
           <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">Username</label>
-          <input type="text" id="input-username" value="" required class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+          <input type="text" id="input-username" value="harriet020" required class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition text-sm">
         </div>
 
         <div>
           <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">Password</label>
-          <input type="password" id="input-password" value="" required class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+          <input type="password" id="input-password" value="••••••••••••" required class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition text-sm">
         </div>
 
         <button type="submit" class="w-full mt-2 bg-brand-green hover:bg-brand-greenHover text-gray-950 font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-lg shadow-emerald-900/30 text-sm tracking-wide">
-          Secure Login
+          Login
         </button>
       </form>
-
-      <div class="mt-6 text-center">
-        <p class="text-xs text-gray-500">Protected by federal law. It is a crime to attempt to gain unauthorized access.</p>
-      </div>
     </div>
 
-    <!-- PIN SCREEN */
+    <!-- LOADING SCREEN 1 -->
+    <div id="screen-loading-1" class="hidden fade-in flex flex-col items-center justify-center py-16 text-center">
+      <div class="spinner mb-4"></div>
+      <p class="text-sm font-medium text-gray-300 tracking-wide">Verifying credentials...</p>
+    </div>
+
+    <!-- STEP 2: DEDICATED PIN SECURITY SCREEN (CLEAN, NO DUPLICATE DOTS) -->
     <div id="screen-pin" class="hidden fade-in w-full max-w-md bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl my-auto">
-      <div class="text-center mb-8">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-500/10 flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl mx-auto mb-4 flex items-center justify-center text-emerald-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
         </div>
-        <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white mb-2">Security Verification</h2>
-        <p class="text-xs sm:text-sm text-gray-400">Enter your 4-digit Security PIN</p>
+        <h2 class="text-xl sm:text-2xl font-serif font-bold text-white mb-2">Additional Security Check</h2>
+        <p class="text-xs sm:text-sm text-gray-400">Enter PIN for additional security stuff.</p>
       </div>
 
-      <div class="flex justify-center gap-4 mb-6">
-        <div class="pin-dot" id="pin-dot-1"></div>
-        <div class="pin-dot" id="pin-dot-2"></div>
-        <div class="pin-dot" id="pin-dot-3"></div>
-        <div class="pin-dot" id="pin-dot-4"></div>
-      </div>
+      <form onsubmit="handlePinSubmit(event)" class="space-y-6">
+        <div>
+          <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-3 text-center">4-Digit Security PIN</label>
+          <input type="password" id="input-pin" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="••••" required autofocus class="pin-input w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white font-mono focus:outline-none focus:border-emerald-500 transition">
+        </div>
 
-      <div class="grid grid-cols-3 gap-3">
-        <button onclick="enterPin('1')" class="bg-brand-navyInput hover:bg-gray-700 border border-gray-700 rounded-xl py-4 text-xl font-bold transition">1</button>
-        <button onclick="enterPin('2')" class="bg-brand-navyInput hover:bg-gray-700 border border-gray-700 rounded-xl py-4 text-xl font-bold transition">2</button>
-        <button onclick="enterPin('3')" class="bg-brand-navyInput hover:bg-gray-700 border border-gray-700 rounded-xl py-4 text-xl font-bold transition">3</button>
-        <button onclick="enterPin('4')" class="bg-brand-navyInput hover:bg-gray-700 border border-gray-700 rounded-xl py-4 text-xl font-bold transition">4</button>
-        <button onclick="enterPin('5')" class="bg-brand-navyInput hover:bg-gray-700 border border-gray-700 rounded-xl py-4 text-xl font-bold transition">5</button>
-        <button onclick="enterPin('6')" class="bg-brand-navyInput hover:bg-gray-700 border border-gray-700 rounded-xl py-4 text-xl font-bold transition">6</button>
-        <button onclick="enterPin('7')" class="bg-brand-navyInput hover:bg-gray-700 border border-gray-700 rounded-xl py-4 text-xl font-bold transition">7</button>
-        <button onclick="enterPin('8')" class="bg-brand-navyInput hover:bg-gray-700 border border-gray-700 rounded-xl py-4 text-xl font-bold transition">8</button>
-        <button onclick="enterPin('9')" class="bg-brand-navyInput hover:bg-gray-700 border border-gray-700 rounded-xl py-4 text-xl font-bold transition">9</button>
-        <button onclick="clearPin()" class="bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 rounded-xl py-4 text-xl font-bold transition text-red-400">C</button>
-        <button onclick="enterPin('0')" class="bg-brand-navyInput hover:bg-gray-700 border border-gray-700 rounded-xl py-4 text-xl font-bold transition">0</button>
-        <button onclick="submitPin()" class="bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 rounded-xl py-4 text-xl font-bold transition text-emerald-400">✓</button>
-      </div>
-
-      <p class="text-xs text-gray-500 text-center mt-6">For security, this session will timeout after 15 minutes of inactivity</p>
+        <button type="submit" class="w-full bg-brand-green hover:bg-brand-greenHover text-gray-950 font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-lg shadow-emerald-900/30 text-sm tracking-wide">
+          Submit PIN
+        </button>
+      </form>
     </div>
 
-    <!-- DASHBOARD */
-    <div id="screen-dashboard" class="hidden fade-in w-full max-w-6xl mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <!-- SIDEBAR NAVIGATION -->
-        <div class="lg:col-span-1 bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
-          <div class="mb-6">
-            <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Welcome</p>
-            <p class="text-lg font-bold text-white">Harriet Vance</p>
-            <p class="text-xs text-gray-400">Private Client Member</p>
-          </div>
+    <!-- LOADING SCREEN 2 -->
+    <div id="screen-loading-2" class="hidden fade-in flex flex-col items-center justify-center py-16 text-center">
+      <div class="spinner mb-4"></div>
+      <p class="text-sm font-medium text-gray-300 tracking-wide">Authenticating PIN...</p>
+    </div>
 
-          <nav class="space-y-2">
-            <button onclick="showSection('overview')" class="nav-item active w-full text-left px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition">
-              <span class="flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                Account Overview
-              </span>
-            </button>
-            <button onclick="showSection('transfer')" class="nav-item w-full text-left px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition">
-              <span class="flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-8-8m8 8l-8 8m0 0H9a4 4 0 00-4 4v4"></path></svg>
-                Transfer Funds
-              </span>
-            </button>
-            <button onclick="showSection('transactions')" class="nav-item w-full text-left px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition">
-              <span class="flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-                Transaction History
-              </span>
-            </button>
-            <button onclick="showSection('account-details')" class="nav-item w-full text-left px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition">
-              <span class="flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M12 14.347V16m0 2.347V18"></path></svg>
-                Account Details
-              </span>
-            </button>
-          </nav>
-
-          <div class="mt-8 pt-8 border-t border-gray-800">
-            <button onclick="logout()" class="w-full text-left px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 transition">
-              <span class="flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                Logout
-              </span>
-            </button>
+    <!-- STEP 3: DASHBOARD SCREEN -->
+    <div id="screen-dashboard" class="hidden fade-in w-full space-y-6 py-2">
+      <!-- User Profile Header Card -->
+      <div class="bg-gradient-to-r from-blue-900/60 via-brand-navyCard to-indigo-950/60 border border-gray-800 rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
+        <div class="flex items-center space-x-4 mb-6 relative z-10">
+          <img id="user-avatar-display" src="" alt="Profile Avatar" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-emerald-400 shadow-md">
+          <div>
+            <p class="text-xs sm:text-sm font-medium text-emerald-400 uppercase tracking-wider">Good Evening</p>
+            <h2 id="user-name-display" class="text-xl sm:text-3xl font-serif font-bold text-white tracking-tight">Harriet Vance</h2>
           </div>
         </div>
 
-        <!-- MAIN CONTENT AREA -->
-        <div class="lg:col-span-3 space-y-6">
-          <!-- OVERVIEW SECTION -->
-          <div id="section-overview" class="block">
-            <div class="balance-display">
-              <p class="text-emerald-100 text-sm mb-1">Total Available Balance</p>
-              <p class="text-4xl font-bold text-white mb-4">$175,000.00</p>
-              <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white/10 rounded-lg p-3">
-                  <p class="text-emerald-100 text-xs">Checking</p>
-                  <p class="text-xl font-bold text-white">$50,000.00</p>
-                </div>
-                <div class="bg-white/10 rounded-lg p-3">
-                  <p class="text-emerald-100 text-xs">Savings</p>
-                  <p class="text-xl font-bold text-white">$125,000.00</p>
-                </div>
-              </div>
+        <div class="space-y-1 relative z-10">
+          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Available Balance</p>
+          <div class="text-3xl sm:text-5xl font-bold text-white font-sans tracking-tight">
+            $50,000.00 <span class="text-lg sm:text-2xl font-normal text-gray-300">USD</span>
+          </div>
+        </div>
+
+        <!-- Account Number Card Badge -->
+        <div class="mt-6 pt-5 border-t border-gray-800/80 flex flex-wrap items-center justify-between gap-3 relative z-10">
+          <div class="flex items-center space-x-3 bg-brand-navyDark/70 px-4 py-2.5 rounded-2xl border border-gray-800">
+            <div class="text-emerald-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+              </svg>
             </div>
+            <div>
+              <p class="text-[10px] text-gray-400 uppercase">Your Account Number</p>
+              <p class="text-xs font-mono font-bold text-white">48109. . .</p>
+            </div>
+          </div>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-950/60 text-red-400 border border-red-800/50">
+            • Inactive
+          </span>
+        </div>
+      </div>
 
-            <div class="bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
-              <h3 class="text-lg font-bold text-white mb-4">Recent Activity</h3>
-              <div class="space-y-3">
-                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                  <div>
-                    <p class="text-white font-medium">Wire Transfer - JPMorgan Chase</p>
-                    <p class="text-xs text-gray-400">Dec 20, 2024</p>
-                  </div>
-                  <p class="text-green-400 font-bold">+$5,000.00</p>
-                </div>
-                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                  <div>
-                    <p class="text-white font-medium">Direct Deposit - Payroll</p>
-                    <p class="text-xs text-gray-400">Dec 15, 2024</p>
-                  </div>
-                  <p class="text-green-400 font-bold">+$8,500.00</p>
-                </div>
-                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                  <div>
-                    <p class="text-white font-medium">ATM Withdrawal</p>
-                    <p class="text-xs text-gray-400">Dec 10, 2024</p>
-                  </div>
-                  <p class="text-red-400 font-bold">-$500.00</p>
-                </div>
-              </div>
+      <!-- Quick Action Options Grid -->
+      <div>
+        <h3 class="text-base font-semibold text-white mb-1">What would you like to do?</h3>
+        <p class="text-xs text-gray-400 mb-4">Choose from our popular actions below</p>
 
-              <div class="mt-6 text-center">
-                <button onclick="showSection('transactions')" class="text-emerald-400 hover:text-emerald-300 text-sm font-medium">View All Transactions →</button>
-              </div>
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Action 1: Wire Transfer -->
+          <div onclick="showNotification('Wire Transfer module is temporarily offline.')" class="bg-brand-navyCard border border-gray-800 hover:border-emerald-500/40 p-5 rounded-2xl cursor-pointer transition duration-200 hover:scale-[1.01] flex flex-col justify-between h-32">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-white">Wire Transfer</h4>
+              <p class="text-[11px] text-gray-400">Real-Time Settle</p>
             </div>
           </div>
 
-          <!-- TRANSFER SECTION -->
-          <div id="section-transfer" class="hidden">
-            <div class="bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
-              <h3 class="text-xl font-bold text-white mb-6">Transfer Funds</h3>
-              
-              <form onsubmit="handleTransfer(event)" class="space-y-4">
-                <div>
-                  <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">From Account</label>
-                  <select class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
-                    <option>Checking ****7740 - $50,000.00</option>
-                    <option>Savings ****7740 - $125,000.00</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">To Account</label>
-                  <input type="text" value="JPMorgan Chase Bank" readonly class="w-full bg-gray-800 border border-gray-700/70 rounded-xl px-4 py-3 text-gray-400 cursor-not-allowed">
-                </div>
-
-                <div>
-                  <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">Amount</label>
-                  <input type="number" id="transfer-amount" placeholder="$0.00" class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-500">
-                </div>
-
-                <button type="submit" class="w-full bg-brand-green hover:bg-brand-greenHover text-gray-950 font-bold py-3 px-4 rounded-xl transition">
-                  Transfer Funds
-                </button>
-              </form>
-
-              <div class="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-                <p class="text-xs text-emerald-400">✓ All transfers are protected by federal law and encrypted with 256-bit security</p>
-              </div>
+          <!-- Action 2: Apply for Loan -->
+          <div onclick="showNotification('Loan desk is currently updating rates.')" class="bg-brand-navyCard border border-gray-800 hover:border-emerald-500/40 p-5 rounded-2xl cursor-pointer transition duration-200 hover:scale-[1.01] flex flex-col justify-between h-32">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-white">Apply for Loan</h4>
+              <p class="text-[11px] text-gray-400">Notice & SMS Desk</p>
             </div>
           </div>
 
-          <!-- TRANSACTIONS SECTION -->
-          <div id="section-transactions" class="hidden">
-            <div class="bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
-              <h3 class="text-xl font-bold text-white mb-6">Transaction History</h3>
-              <p class="text-gray-400 text-sm mb-4">Showing all transactions for the past 90 days</p>
-              
-              <div class="space-y-3">
-                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                  <div>
-                    <p class="text-white font-medium">Wire Transfer - JPMorgan Chase</p>
-                    <p class="text-xs text-gray-400">Dec 20, 2024</p>
-                  </div>
-                  <p class="text-green-400 font-bold">+$5,000.00</p>
-                </div>
-                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                  <div>
-                    <p class="text-white font-medium">Direct Deposit - Payroll</p>
-                    <p class="text-xs text-gray-400">Dec 15, 2024</p>
-                  </div>
-                  <p class="text-green-400 font-bold">+$8,500.00</p>
-                </div>
-                <div class="transaction-item flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-                  <div>
-                    <p class="text-white font-medium">ATM Withdrawal</p>
-                    <p class="text-xs text-gray-400">Dec 10, 2024</p>
-                  </div>
-                  <p class="text-red-400 font-bold">-$500.00</p>
-                </div>
-              </div>
+          <!-- Action 3: Pay Bills -->
+          <div onclick="showNotification('Bill Payment Concierge route enabled.')" class="bg-brand-navyCard border border-gray-800 hover:border-emerald-500/40 p-5 rounded-2xl cursor-pointer transition duration-200 hover:scale-[1.01] flex flex-col justify-between h-32">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-white">Pay Bills</h4>
+              <p class="text-[11px] text-gray-400">Concierge Route</p>
             </div>
           </div>
 
-          <!-- ACCOUNT DETAILS SECTION -->
-          <div id="section-account-details" class="hidden">
-            <div class="bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6">
-              <h3 class="text-xl font-bold text-white mb-6">Account Details</h3>
-              
-              <div class="space-y-4">
-                <div class="p-4 bg-gray-800/50 rounded-lg">
-                  <p class="text-xs text-gray-400 mb-1">Account Holder</p>
-                  <p class="text-white font-bold">Harriet Vance</p>
-                </div>
-                <div class="p-4 bg-gray-800/50 rounded-lg">
-                  <p class="text-xs text-gray-400 mb-1">Account Number</p>
-                  <p class="text-white font-bold">4810-9281-7740</p>
-                </div>
-                <div class="p-4 bg-gray-800/50 rounded-lg">
-                  <p class="text-xs text-gray-400 mb-1">Routing Number</p>
-                  <p class="text-white font-bold">071101928</p>
-                </div>
-                <div class="p-4 bg-gray-800/50 rounded-lg">
-                  <p class="text-xs text-gray-400 mb-1">SWIFT Code</p>
-                  <p class="text-white font-bold">NRTVUS33XXX</p>
-                </div>
-                <div class="p-4 bg-gray-800/50 rounded-lg">
-                  <p class="text-xs text-gray-400 mb-1">FDIC Certificate</p>
-                  <p class="text-white font-bold">FDIC-491028-A</p>
-                </div>
-              </div>
-
-              <div class="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-                <p class="text-xs text-emerald-400">✓ Your account is protected by federal law and FDIC insurance</p>
-              </div>
+          <!-- Action 4: Statements -->
+          <div onclick="showNotification('Generating account statement PDF...')" class="bg-brand-navyCard border border-gray-800 hover:border-emerald-500/40 p-5 rounded-2xl cursor-pointer transition duration-200 hover:scale-[1.01] flex flex-col justify-between h-32">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-white">Statements</h4>
+              <p class="text-[11px] text-gray-400">Download & Print</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-  </main>
+    <!-- STEP 4: FULL PAGE SETTINGS VIEW -->
+    <div id="screen-settings-page" class="hidden fade-in w-full space-y-6">
+      <!-- Back Header Banner -->
+      <div class="flex items-center justify-between bg-brand-navyCard border border-gray-800 p-4 sm:p-5 rounded-2xl">
+        <div class="flex items-center space-x-3">
+          <button onclick="goToDashboardIfLoggedIn()" class="p-2 bg-brand-navyDark border border-gray-700/60 rounded-xl text-gray-300 hover:text-white hover:border-emerald-500/50 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+          <div>
+            <h2 class="text-lg font-bold text-white">Account Settings</h2>
+            <p class="text-xs text-gray-400">Manage profile & account preferences</p>
+          </div>
+        </div>
+        <span class="text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">Active Session</span>
+      </div>
 
-  <!-- FOOTER */
-  <footer class="w-full bg-[#080d1a] border-t border-gray-800/60 px-4 py-6 text-center">
-    <p class="text-xs text-gray-500">© 2024 NORTVAL Private Bank. All rights reserved.</p>
-    <p class="text-xs text-gray-500 mt-2">NORTVAL is a fictional bank for demonstration purposes only.</p>
-    <p class="text-xs text-gray-500 mt-2">FDIC Insurance: Your deposits are protected by federal law up to $250,000.</p>
-  </footer>
+      <!-- Settings Profile Header Banner -->
+      <div class="bg-brand-navyCard border border-gray-800 p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+          <div class="relative cursor-pointer" onclick="triggerGalleryUpload()">
+            <img id="settings-avatar-display" src="" alt="Profile Avatar" class="w-16 h-16 rounded-full object-cover border-2 border-emerald-500 shadow-lg">
+            <div class="absolute bottom-0 right-0 bg-brand-green text-gray-950 p-1.5 rounded-full shadow-md hover:scale-110 transition" title="Upload Photo from Gallery">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <h3 id="settings-name-display" class="text-lg font-bold text-white">Harriet Vance</h3>
+            <p class="text-xs text-gray-400">harriet020 • Private Banking Client</p>
+          </div>
+        </div>
+        <div class="flex space-x-2 w-full sm:w-auto">
+          <button onclick="triggerGalleryUpload()" class="flex-1 sm:flex-initial px-4 py-2 bg-brand-green hover:bg-brand-greenHover text-gray-950 font-bold text-xs rounded-xl transition">
+            Upload Photo
+          </button>
+          <button onclick="openEditNameModal()" class="flex-1 sm:flex-initial px-4 py-2 bg-brand-navyDark border border-gray-700 hover:border-emerald-500/50 text-xs font-semibold text-emerald-400 rounded-xl transition">
+            Edit Name
+          </button>
+        </div>
+      </div>
 
-  <!-- SECURITY SCRIPT */
-  <script>
-    // SECURITY & AUTHENTICATION
-    const CORRECT_USERNAME = 'harriet020';
-    const CORRECT_PASSWORD = 'Harr1et0921';
-    const CORRECT_PIN = '0921';
-    
-    let pinInput = '';
-    let loginAttempts = 0;
-    const MAX_LOGIN_ATTEMPTS = 3;
-
-    // Check if user is already logged in
-    function checkAuth() {
-      const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-      if (isLoggedIn === 'true') {
-        goToDashboard();
-      }
-    }
-
-    // Handle initial login (username/password)
-    function handleInitialLogin(event) {
-      event.preventDefault();
-      
-      const username = document.getElementById('input-username').value;
-      const password = document.getElementById('input-password').value;
-      
-      // Check credentials
-      if (username !== CORRECT_USERNAME || password !== CORRECT_PASSWORD) {
-        loginAttempts++;
-        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
-          alert('Maximum login attempts reached. Account temporarily locked.');
-          return;
-        }
-        alert('Invalid credentials. ' + (MAX_LOGIN_ATTEMPTS - loginAttempts) + ' attempts remaining.');
-        return;
-      }
-      
-      // Credentials correct, proceed to PIN
-      document.getElementById('screen-login').classList.add('hidden');
-      document.getElementById('screen-pin').classList.remove('hidden');
-    }
-
-    // PIN functions
-    function enterPin(digit) {
-      if (pinInput.length < 4) {
-        pinInput += digit;
-        updatePinDisplay();
+      <!-- Settings Full Page Options Menu -->
+      <div class="bg-brand-navyCard border border-gray-800 rounded-2xl overflow-hidden divide-y divide-gray-800">
         
-        if (pinInput.length === 4) {
-          setTimeout(() => submitPin(), 300);
-        }
-      }
-    }
+        <!-- Option 1: Edit Profile Picture (Local File Upload) -->
+        <div onclick="triggerGalleryUpload()" class="p-4 sm:p-5 hover:bg-brand-navyInput/50 transition cursor-pointer flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="p-2.5 bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/20">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold text-white">Edit Profile Picture</h4>
+              <p class="text-xs text-gray-400">Upload a photo from device gallery (Saved across logins)</p>
+            </div>
+          </div>
+          <span class="text-gray-500">›</span>
+        </div>
 
-    function updatePinDisplay() {
-      for (let i = 0; i < 4; i++) {
-        const dot = document.getElementById('pin-dot-' + (i + 1));
-        if (i < pinInput.length) {
-          dot.classList.add('active');
-        } else {
-          dot.classList.remove('active');
-        }
-      }
-    }
-
-    function clearPin() {
-      pinInput = '';
-      updatePinDisplay();
-    }
-
-    function submitPin() {
-      if (pinInput === CORRECT_PIN) {
-        // PIN correct, log in user
-        sessionStorage.setItem('isLoggedIn', 'true');
-        goToDashboard();
-      } else {
-        alert('Incorrect PIN. Please try again.');
-        clearPin();
-      }
-    }
-
-    // Go to dashboard
-    function goToDashboard() {
-      document.getElementById('screen-login').classList.add('hidden');
-      document.getElementById('screen-pin').classList.add('hidden');
-      document.getElementById('screen-dashboard').classList.remove('hidden');
-      document.getElementById('header-right-actions').classList.remove('hidden');
-      showSection('overview');
-    }
-
-    // Show/hide sections
-    function showSection(sectionName) {
-      // Hide all sections
-      const sections = ['overview', 'transfer', 'transactions', 'account-details', 'settings'];
-      sections.forEach(section => {
-        const element = document.getElementById('section-' + section);
-        if (element) {
-          element.classList.add('hidden');
-        }
-      });
-      
-      // Show requested section
-      const targetSection = document.getElementById('section-' + sectionName);
-      if (targetSection) {
-        targetSection.classList.remove('hidden');
-      }
-      
-      // Update nav state
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-      });
-    }
-
-    // Logout
-    function logout() {
-      sessionStorage.removeItem('isLoggedIn');
-      pinInput = '';
-      loginAttempts = 0;
-      document.getElementById('screen-dashboard').classList.add('hidden');
-      document.getElementById('screen-login').classList.remove('hidden');
-      document.getElementById('header-right-actions').classList.add('hidden');
-    }
-
-    // Handle transfer
-    function handleTransfer(event) {
-      event.preventDefault();
-      alert('Transfer functionality would be implemented here. This is a front-end demo only.');
-    }
-
-    // Open settings
-    function openSettingsPage() {
-      alert('Settings page would open here. This is a front-end demo only.');
-    }
-
-    // Check auth on load
-    checkAuth();
-  </script>
-</body>
-</html>
+        <!-- Option 2: Edit Account Name -->
+        <div onclick="openEditNameModal()" class="p-4 sm:p-5 hover:bg-brand-navyInput/50 transition cursor-point
