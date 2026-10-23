@@ -1,17 +1,17 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NORTVAL PRIVATE BANK</title>
-  <!-- Tailwind CSS CDN -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080f1e">
+  <meta name="description" content="Nortval Private Banking — fictional banking interface demo.">
+  <title>NORTVAL PRIVATE BANK — Demo</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  
+
   <script>
     tailwind.config = {
       theme: {
@@ -22,9 +22,7 @@
               navyCard: '#10192d',
               navyInput: '#18243e',
               green: '#10b981',
-              greenHover: '#059669',
-              greenBright: '#00e676',
-              accentRed: '#ef4444'
+              greenHover: '#059669'
             }
           },
           fontFamily: {
@@ -33,310 +31,527 @@
           }
         }
       }
-    }
+    };
   </script>
 
   <style>
+    * { box-sizing: border-box; }
+
     body {
-      background-color: #080f1e;
-      color: #f3f4f6;
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
       margin: 0;
-      user-select: none;
+      min-height: 100vh;
+      background: #080f1e;
+      color: #f3f4f6;
+      font-family: Inter, sans-serif;
     }
 
-    /* Animations */
-    .fade-in {
-      animation: fadeIn 0.35s ease-in-out forwards;
-    }
+    .fade-in { animation: fadeIn .3s ease both; }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(7px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Custom Loader Spinner */
     .spinner {
-      border: 3px solid rgba(255, 255, 255, 0.1);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      border: 3px solid #ffffff20;
       border-left-color: #10b981;
-      animation: spin 0.8s linear infinite;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      to { transform: rotate(360deg); }
     }
 
-    /* Clean PIN Input Styling */
     .pin-input {
-      letter-spacing: 0.6em;
-      font-size: 1.5rem;
+      letter-spacing: .6em;
       text-align: center;
+      font-size: 1.5rem;
     }
-    .pin-input::placeholder {
-      letter-spacing: 0.4em;
-      opacity: 0.4;
+
+    .field {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1px solid #374151;
+      border-radius: 12px;
+      color: white;
+      background: #18243e;
+      outline: none;
+    }
+
+    .field:focus { border-color: #10b981; }
+
+    .primary-btn {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 12px;
+      background: #10b981;
+      color: #07150f;
+      font-weight: 800;
+      transition: background .2s;
+    }
+
+    .primary-btn:hover { background: #059669; }
+
+    .secondary-btn {
+      padding: 10px 14px;
+      border: 1px solid #374151;
+      border-radius: 10px;
+      background: #080f1e;
+      color: #d1fae5;
+    }
+
+    .action-card {
+      min-height: 130px;
+      padding: 18px;
+      border: 1px solid #293448;
+      border-radius: 17px;
+      background: #10192d;
+      text-align: left;
+      transition: border-color .2s, transform .2s;
+    }
+
+    .action-card:hover {
+      border-color: #10b981;
+      transform: translateY(-2px);
+    }
+
+    .hidden { display: none !important; }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 2px solid #34d399;
+      outline-offset: 3px;
+    }
+
+    #toast {
+      max-width: calc(100vw - 32px);
+      overflow-wrap: anywhere;
     }
   </style>
 </head>
-<body class="flex flex-col min-h-screen relative overflow-x-hidden">
 
-  <!-- ================= TOP HEADER NAVIGATION ================= -->
-  <header class="w-full bg-[#080f1e]/95 backdrop-blur-md sticky top-0 z-40 border-b border-gray-800/60 px-4 py-3.5 sm:px-8 flex items-center justify-between">
-    <div class="flex items-center space-x-3 cursor-pointer" onclick="goToDashboardIfLoggedIn()">
-      <!-- Bank Emblem SVG -->
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-md">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-        </svg>
-      </div>
-      <div>
-        <h1 class="font-serif font-bold text-lg sm:text-xl tracking-wider text-white uppercase leading-tight">NORTVAL</h1>
-        <p class="text-[10px] sm:text-xs text-gray-400 font-medium tracking-widest uppercase">EST. 1894 • FDIC INSURED</p>
-      </div>
-    </div>
+<body class="min-h-screen flex flex-col">
 
-    <!-- Right Header Actions (Clean, Top Numbers Removed) -->
-    <div id="header-right-actions" class="flex items-center space-x-3">
-      <!-- Settings Icon Button (Professional Sketch/Vector Line Icon) -->
-      <button id="settings-btn" onclick="openSettingsPage()" class="hidden p-2.5 rounded-xl bg-brand-navyCard border border-gray-700/60 text-gray-300 hover:text-emerald-400 hover:border-emerald-500/50 transition duration-200 focus:outline-none" title="Account Settings">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
+  <!-- Header -->
+  <header class="sticky top-0 z-40 border-b border-gray-800 bg-[#080f1e]/95 backdrop-blur-md">
+    <div class="max-w-5xl mx-auto px-4 sm:px-7 py-3 flex items-center justify-between gap-3">
+      <button onclick="goHome()" class="flex items-center gap-3 text-left">
+        <span class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl">♜</span>
+        <span>
+          <span class="block font-serif font-bold tracking-widest text-white">NORTVAL</span>
+          <span class="block text-[9px] tracking-widest text-gray-400">PRIVATE BANKING DEMO</span>
+        </span>
+      </button>
+
+      <button id="settings-btn" onclick="openSettings()" class="hidden secondary-btn" aria-label="Open settings">
+        ⚙ Settings
       </button>
     </div>
   </header>
 
-  <!-- ================= MAIN CONTENT CONTAINER ================= -->
-  <main class="flex-grow flex items-center justify-center p-4 sm:p-6 max-w-4xl mx-auto w-full">
+  <!-- Demo disclaimer -->
+  <div class="bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 text-center text-xs text-amber-200">
+    DEMONSTRATION ONLY — No real accounts, funds, or banking transactions.
+  </div>
 
-    <!-- STEP 1: LOGIN SCREEN -->
-    <div id="screen-login" class="fade-in w-full max-w-md bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl my-auto">
+  <main class="flex-1 w-full max-w-4xl mx-auto p-4 sm:p-6 flex flex-col justify-center">
+
+    <!-- LOGIN -->
+    <section id="screen-login" class="fade-in w-full max-w-md mx-auto rounded-2xl border border-gray-800 bg-brand-navyCard p-6 sm:p-8 shadow-2xl">
       <div class="text-center mb-8">
-        <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white mb-2">Private Client Login</h2>
-        <p class="text-xs sm:text-sm text-gray-400">Enter authorized credentials to continue</p>
+        <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl">♜</div>
+        <h1 class="text-2xl sm:text-3xl font-serif font-bold">Private Client Login</h1>
+        <p class="text-sm text-gray-400 mt-2">Enter a display name to preview the demo.</p>
       </div>
 
-      <form onsubmit="handleInitialLogin(event)" class="space-y-5">
+      <form id="login-form" class="space-y-5">
         <div>
-          <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">Username</label>
-          <input type="text" id="input-username" value="harriet020" required class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+          <label for="username" class="block text-xs uppercase tracking-wider text-gray-300 mb-2">Display username</label>
+          <input id="username" class="field" value="harriet020" maxlength="40" autocomplete="username" required>
         </div>
 
         <div>
-          <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-2">Password</label>
-          <input type="password" id="input-password" value="••••••••••••" required class="w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 transition text-sm">
+          <label for="display-name" class="block text-xs uppercase tracking-wider text-gray-300 mb-2">Display name</label>
+          <input id="display-name" class="field" value="Harriet Vance" maxlength="60" autocomplete="name" required>
         </div>
 
-        <button type="submit" class="w-full mt-2 bg-brand-green hover:bg-brand-greenHover text-gray-950 font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-lg shadow-emerald-900/30 text-sm tracking-wide">
-          Login
-        </button>
+        <button class="primary-btn" type="submit">Enter Demo</button>
+
+        <p class="text-xs text-gray-500 text-center">
+          No password or real security PIN is collected. This is not a real banking login.
+        </p>
       </form>
-    </div>
+    </section>
 
-    <!-- LOADING SCREEN 1 -->
-    <div id="screen-loading-1" class="hidden fade-in flex flex-col items-center justify-center py-16 text-center">
-      <div class="spinner mb-4"></div>
-      <p class="text-sm font-medium text-gray-300 tracking-wide">Verifying credentials...</p>
-    </div>
+    <!-- LOADING -->
+    <section id="screen-loading" class="hidden py-16 text-center">
+      <div class="spinner mx-auto mb-4"></div>
+      <p id="loading-text" class="text-sm text-gray-300">Loading demo...</p>
+    </section>
 
-    <!-- STEP 2: DEDICATED PIN SECURITY SCREEN (CLEAN, NO DUPLICATE DOTS) -->
-    <div id="screen-pin" class="hidden fade-in w-full max-w-md bg-brand-navyCard border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl my-auto">
-      <div class="text-center mb-6">
-        <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl mx-auto mb-4 flex items-center justify-center text-emerald-400">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-        </div>
-        <h2 class="text-xl sm:text-2xl font-serif font-bold text-white mb-2">Additional Security Check</h2>
-        <p class="text-xs sm:text-sm text-gray-400">Enter PIN for additional security stuff.</p>
+    <!-- DEMO PIN -->
+    <section id="screen-pin" class="hidden fade-in w-full max-w-md mx-auto rounded-2xl border border-gray-800 bg-brand-navyCard p-6 sm:p-8">
+      <div class="text-center mb-7">
+        <div class="text-emerald-400 text-3xl mb-3">◇</div>
+        <h2 class="text-2xl font-serif font-bold">Demo Security Screen</h2>
+        <p class="text-sm text-gray-400 mt-2">This is a visual preview, not real PIN verification.</p>
       </div>
 
-      <form onsubmit="handlePinSubmit(event)" class="space-y-6">
-        <div>
-          <label class="block text-xs font-medium text-gray-300 uppercase tracking-wider mb-3 text-center">4-Digit Security PIN</label>
-          <input type="password" id="input-pin" maxlength="4" pattern="[0-9]*" inputmode="numeric" placeholder="••••" required autofocus class="pin-input w-full bg-brand-navyInput border border-gray-700/70 rounded-xl px-4 py-3.5 text-white font-mono focus:outline-none focus:border-emerald-500 transition">
-        </div>
+      <form id="pin-form" class="space-y-5">
+        <label for="demo-pin" class="block text-center text-xs uppercase tracking-wider text-gray-300">
+          Optional 4-digit demo code
+        </label>
+        <input id="demo-pin" class="field pin-input" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="••••" autocomplete="off">
 
-        <button type="submit" class="w-full bg-brand-green hover:bg-brand-greenHover text-gray-950 font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-lg shadow-emerald-900/30 text-sm tracking-wide">
-          Submit PIN
-        </button>
+        <button type="submit" class="primary-btn">Continue to Demo</button>
+        <button type="button" onclick="showScreen('screen-login')" class="w-full text-sm text-gray-400 py-2">Back to login</button>
       </form>
-    </div>
+    </section>
 
-    <!-- LOADING SCREEN 2 -->
-    <div id="screen-loading-2" class="hidden fade-in flex flex-col items-center justify-center py-16 text-center">
-      <div class="spinner mb-4"></div>
-      <p class="text-sm font-medium text-gray-300 tracking-wide">Authenticating PIN...</p>
-    </div>
+    <!-- DASHBOARD -->
+    <section id="screen-dashboard" class="hidden fade-in w-full space-y-6">
 
-    <!-- STEP 3: DASHBOARD SCREEN -->
-    <div id="screen-dashboard" class="hidden fade-in w-full space-y-6 py-2">
-      <!-- User Profile Header Card -->
-      <div class="bg-gradient-to-r from-blue-900/60 via-brand-navyCard to-indigo-950/60 border border-gray-800 rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
-        <div class="flex items-center space-x-4 mb-6 relative z-10">
-          <img id="user-avatar-display" src="" alt="Profile Avatar" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-emerald-400 shadow-md">
+      <div class="rounded-3xl border border-gray-800 bg-gradient-to-r from-blue-950 via-brand-navyCard to-indigo-950 p-6 sm:p-8 shadow-2xl">
+        <div class="flex items-center gap-4 mb-7">
+          <img id="avatar" class="w-14 h-14 rounded-full object-cover border-2 border-emerald-400" alt="Demo profile picture">
           <div>
-            <p class="text-xs sm:text-sm font-medium text-emerald-400 uppercase tracking-wider">Good Evening</p>
-            <h2 id="user-name-display" class="text-xl sm:text-3xl font-serif font-bold text-white tracking-tight">Harriet Vance</h2>
+            <p class="text-xs uppercase tracking-wider text-emerald-400">Welcome back</p>
+            <h2 id="dashboard-name" class="text-xl sm:text-2xl font-serif font-bold">Harriet Vance</h2>
+            <p id="dashboard-username" class="text-xs text-gray-400 mt-1">harriet020</p>
           </div>
         </div>
 
-        <div class="space-y-1 relative z-10">
-          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Available Balance</p>
-          <div class="text-3xl sm:text-5xl font-bold text-white font-sans tracking-tight">
-            $50,000.00 <span class="text-lg sm:text-2xl font-normal text-gray-300">USD</span>
-          </div>
+        <p class="text-xs text-gray-400 uppercase tracking-wider mb-2">Simulated available balance</p>
+        <div class="text-3xl sm:text-5xl font-bold tracking-tight">
+          $50,000.00 <span class="text-lg text-gray-300 font-normal">USD</span>
         </div>
 
-        <!-- Account Number Card Badge -->
-        <div class="mt-6 pt-5 border-t border-gray-800/80 flex flex-wrap items-center justify-between gap-3 relative z-10">
-          <div class="flex items-center space-x-3 bg-brand-navyDark/70 px-4 py-2.5 rounded-2xl border border-gray-800">
-            <div class="text-emerald-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-              </svg>
-            </div>
-            <div>
-              <p class="text-[10px] text-gray-400 uppercase">Your Account Number</p>
-              <p class="text-xs font-mono font-bold text-white">48109. . .</p>
-            </div>
+        <div class="mt-6 pt-5 border-t border-gray-700/70 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p class="text-[10px] text-gray-400 uppercase">Demo account reference</p>
+            <p class="font-mono text-sm">DEMO-48109</p>
           </div>
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-950/60 text-red-400 border border-red-800/50">
-            • Inactive
+          <span class="text-xs px-3 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">
+            Simulated account
           </span>
         </div>
       </div>
 
-      <!-- Quick Action Options Grid -->
       <div>
-        <h3 class="text-base font-semibold text-white mb-1">What would you like to do?</h3>
-        <p class="text-xs text-gray-400 mb-4">Choose from our popular actions below</p>
+        <h3 class="font-semibold text-lg">What would you like to do?</h3>
+        <p class="text-sm text-gray-400 mb-4">Choose a demo feature.</p>
 
-        <div class="grid grid-cols-2 gap-4">
-          <!-- Action 1: Wire Transfer -->
-          <div onclick="showNotification('Wire Transfer module is temporarily offline.')" class="bg-brand-navyCard border border-gray-800 hover:border-emerald-500/40 p-5 rounded-2xl cursor-pointer transition duration-200 hover:scale-[1.01] flex flex-col justify-between h-32">
-            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-bold text-sm text-white">Wire Transfer</h4>
-              <p class="text-[11px] text-gray-400">Real-Time Settle</p>
-            </div>
-          </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <button class="action-card" onclick="openFeature('transfer')">
+            <span class="text-2xl">↗</span>
+            <h4 class="font-bold text-sm mt-4">Transfers</h4>
+            <p class="text-xs text-gray-400 mt-1">Preview</p>
+          </button>
 
-          <!-- Action 2: Apply for Loan -->
-          <div onclick="showNotification('Loan desk is currently updating rates.')" class="bg-brand-navyCard border border-gray-800 hover:border-emerald-500/40 p-5 rounded-2xl cursor-pointer transition duration-200 hover:scale-[1.01] flex flex-col justify-between h-32">
-            <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-bold text-sm text-white">Apply for Loan</h4>
-              <p class="text-[11px] text-gray-400">Notice & SMS Desk</p>
-            </div>
-          </div>
+          <button class="action-card" onclick="openFeature('loan')">
+            <span class="text-2xl">▤</span>
+            <h4 class="font-bold text-sm mt-4">Loans</h4>
+            <p class="text-xs text-gray-400 mt-1">Preview</p>
+          </button>
 
-          <!-- Action 3: Pay Bills -->
-          <div onclick="showNotification('Bill Payment Concierge route enabled.')" class="bg-brand-navyCard border border-gray-800 hover:border-emerald-500/40 p-5 rounded-2xl cursor-pointer transition duration-200 hover:scale-[1.01] flex flex-col justify-between h-32">
-            <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-bold text-sm text-white">Pay Bills</h4>
-              <p class="text-[11px] text-gray-400">Concierge Route</p>
-            </div>
-          </div>
+          <button class="action-card" onclick="openFeature('bills')">
+            <span class="text-2xl">▣</span>
+            <h4 class="font-bold text-sm mt-4">Pay Bills</h4>
+            <p class="text-xs text-gray-400 mt-1">Preview</p>
+          </button>
 
-          <!-- Action 4: Statements -->
-          <div onclick="showNotification('Generating account statement PDF...')" class="bg-brand-navyCard border border-gray-800 hover:border-emerald-500/40 p-5 rounded-2xl cursor-pointer transition duration-200 hover:scale-[1.01] flex flex-col justify-between h-32">
-            <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-bold text-sm text-white">Statements</h4>
-              <p class="text-[11px] text-gray-400">Download & Print</p>
-            </div>
-          </div>
+          <button class="action-card" onclick="openFeature('statements')">
+            <span class="text-2xl">▧</span>
+            <h4 class="font-bold text-sm mt-4">Statements</h4>
+            <p class="text-xs text-gray-400 mt-1">Download demo</p>
+          </button>
         </div>
       </div>
-    </div>
 
-    <!-- STEP 4: FULL PAGE SETTINGS VIEW -->
-    <div id="screen-settings-page" class="hidden fade-in w-full space-y-6">
-      <!-- Back Header Banner -->
-      <div class="flex items-center justify-between bg-brand-navyCard border border-gray-800 p-4 sm:p-5 rounded-2xl">
-        <div class="flex items-center space-x-3">
-          <button onclick="goToDashboardIfLoggedIn()" class="p-2 bg-brand-navyDark border border-gray-700/60 rounded-xl text-gray-300 hover:text-white hover:border-emerald-500/50 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-          </button>
+      <div class="rounded-2xl border border-gray-800 bg-brand-navyCard p-5">
+        <div class="flex items-center justify-between gap-3">
           <div>
-            <h2 class="text-lg font-bold text-white">Account Settings</h2>
-            <p class="text-xs text-gray-400">Manage profile & account preferences</p>
+            <h3 class="font-semibold">Recent activity</h3>
+            <p class="text-xs text-gray-400 mt-1">Sample data only</p>
           </div>
+          <span class="text-xs text-emerald-400">DEMO</span>
         </div>
-        <span class="text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30">Active Session</span>
-      </div>
 
-      <!-- Settings Profile Header Banner -->
-      <div class="bg-brand-navyCard border border-gray-800 p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center space-x-4">
-          <div class="relative cursor-pointer" onclick="triggerGalleryUpload()">
-            <img id="settings-avatar-display" src="" alt="Profile Avatar" class="w-16 h-16 rounded-full object-cover border-2 border-emerald-500 shadow-lg">
-            <div class="absolute bottom-0 right-0 bg-brand-green text-gray-950 p-1.5 rounded-full shadow-md hover:scale-110 transition" title="Upload Photo from Gallery">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-          </div>
-          <div>
-            <h3 id="settings-name-display" class="text-lg font-bold text-white">Harriet Vance</h3>
-            <p class="text-xs text-gray-400">harriet020 • Private Banking Client</p>
-          </div>
-        </div>
-        <div class="flex space-x-2 w-full sm:w-auto">
-          <button onclick="triggerGalleryUpload()" class="flex-1 sm:flex-initial px-4 py-2 bg-brand-green hover:bg-brand-greenHover text-gray-950 font-bold text-xs rounded-xl transition">
-            Upload Photo
-          </button>
-          <button onclick="openEditNameModal()" class="flex-1 sm:flex-initial px-4 py-2 bg-brand-navyDark border border-gray-700 hover:border-emerald-500/50 text-xs font-semibold text-emerald-400 rounded-xl transition">
-            Edit Name
-          </button>
-        </div>
-      </div>
-
-      <!-- Settings Full Page Options Menu -->
-      <div class="bg-brand-navyCard border border-gray-800 rounded-2xl overflow-hidden divide-y divide-gray-800">
-        
-        <!-- Option 1: Edit Profile Picture (Local File Upload) -->
-        <div onclick="triggerGalleryUpload()" class="p-4 sm:p-5 hover:bg-brand-navyInput/50 transition cursor-pointer flex items-center justify-between">
-          <div class="flex items-center space-x-4">
-            <div class="p-2.5 bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/20">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
+        <div class="mt-5 space-y-4">
+          <div class="flex items-center justify-between gap-3">
             <div>
-              <h4 class="text-sm font-semibold text-white">Edit Profile Picture</h4>
-              <p class="text-xs text-gray-400">Upload a photo from device gallery (Saved across logins)</p>
+              <p class="text-sm">Account opened</p>
+              <p class="text-xs text-gray-400">Demonstration record</p>
             </div>
+            <span class="text-sm text-gray-300">—</span>
           </div>
-          <span class="text-gray-500">›</span>
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p class="text-sm">Sample credit</p>
+              <p class="text-xs text-gray-400">Not a real transaction</p>
+            </div>
+            <span class="text-sm text-emerald-400">+$500.00</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="screen-settings" class="hidden fade-in w-full space-y-5">
+      <div class="rounded-2xl border border-gray-800 bg-brand-navyCard p-5 flex items-center gap-3">
+        <button class="secondary-btn" onclick="showScreen('screen-dashboard')">← Back</button>
+        <div>
+          <h2 class="font-bold text-lg">Account Settings</h2>
+          <p class="text-xs text-gray-400">Demo profile preferences</p>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-gray-800 bg-brand-navyCard p-5">
+        <div class="flex items-center gap-4">
+          <img id="settings-avatar" class="w-16 h-16 rounded-full object-cover border-2 border-emerald-500" alt="Profile preview">
+          <div class="min-w-0">
+            <h3 id="settings-name" class="font-bold"></h3>
+            <p id="settings-username" class="text-xs text-gray-400 break-words"></p>
+          </div>
         </div>
 
-        <!-- Option 2: Edit Account Name -->
-        <div onclick="openEditNameModal()" class="p-4 sm:p-5 hover:bg-brand-navyInput/50 transition cursor-point
+        <div class="mt-5 space-y-3">
+          <label for="photo-upload" class="block text-xs text-gray-300">Change profile picture</label>
+          <input id="photo-upload" type="file" accept="image/jpeg,image/png,image/webp" class="block w-full text-sm text-gray-300">
+
+          <label for="edit-name" class="block text-xs text-gray-300">Display name</label>
+          <input id="edit-name" class="field" maxlength="60">
+
+          <button class="primary-btn" onclick="saveProfile()" type="button">Save Profile</button>
+          <button class="secondary-btn w-full" onclick="resetProfile()" type="button">Reset Profile</button>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-gray-800 bg-brand-navyCard divide-y divide-gray-800">
+        <button onclick="showNotification('This demo does not send emails or reset real PINs.')" class="w-full p-4 text-left">
+          <span class="block text-sm font-semibold">Security settings</span>
+          <span class="block text-xs text-gray-400 mt-1">No real security credentials are stored.</span>
+        </button>
+
+        <button onclick="showNotification('Notification preferences are not connected to a service.')" class="w-full p-4 text-left">
+          <span class="block text-sm font-semibold">Notification preferences</span>
+          <span class="block text-xs text-gray-400 mt-1">Demo preview only.</span>
+        </button>
+
+        <button onclick="showNotification('No support service is connected to this demo.')" class="w-full p-4 text-left">
+          <span class="block text-sm font-semibold">Support</span>
+          <span class="block text-xs text-gray-400 mt-1">No live concierge is connected.</span>
+        </button>
+
+        <button onclick="signOut()" class="w-full p-4 text-left text-red-400">
+          <span class="block text-sm font-semibold">Exit Demo</span>
+          <span class="block text-xs text-gray-400 mt-1">Return to the welcome screen.</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- FEATURE DETAILS -->
+    <section id="screen-feature" class="hidden fade-in w-full max-w-lg mx-auto rounded-2xl border border-gray-800 bg-brand-navyCard p-6">
+      <button onclick="showScreen('screen-dashboard')" class="secondary-btn mb-5">← Dashboard</button>
+      <h2 id="feature-title" class="text-2xl font-serif font-bold mb-3">Demo feature</h2>
+      <p id="feature-description" class="text-sm text-gray-300 leading-6"></p>
+      <div id="feature-content" class="mt-5"></div>
+    </section>
+
+  </main>
+
+  <footer class="text-center text-xs text-gray-500 px-4 py-5 border-t border-gray-800">
+    NORTVAL — Fictional banking interface demonstration. No real financial services are provided.
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" role="status" aria-live="polite" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 rounded-xl border border-emerald-500/40 bg-brand-navyCard px-5 py-3 text-sm shadow-2xl"></div>
+
+  <script>
+    "use strict";
+
+    const DEFAULT_AVATAR =
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80";
+
+    const DEFAULT_PROFILE = {
+      name: "Harriet Vance",
+      username: "harriet020",
+      avatar: DEFAULT_AVATAR
+    };
+
+    const STORAGE_KEY = "nortval_demo_profile_v2";
+
+    let profile = { ...DEFAULT_PROFILE };
+    let toastTimer;
+    let featureObjectUrl = null;
+
+    const screens = [
+      "screen-login",
+      "screen-loading",
+      "screen-pin",
+      "screen-dashboard",
+      "screen-settings",
+      "screen-feature"
+    ];
+
+    function showScreen(id) {
+      screens.forEach(screenId => {
+        document.getElementById(screenId).classList.add("hidden");
+      });
+
+      document.getElementById(id).classList.remove("hidden");
+      document.getElementById(id).classList.add("fade-in");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function goHome() {
+      const dashboard = document.getElementById("screen-dashboard");
+
+      if (!dashboard.classList.contains("hidden")) {
+        openSettings();
+      } else {
+        showScreen("screen-login");
+      }
+    }
+
+    function showNotification(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.remove("hidden");
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 3200);
+    }
+
+    function loadProfile() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+
+        if (saved) {
+          const parsed = JSON.parse(saved);
+
+          profile = {
+            name: typeof parsed.name === "string"
+              ? parsed.name.slice(0, 60)
+              : DEFAULT_PROFILE.name,
+
+            username: typeof parsed.username === "string"
+              ? parsed.username.slice(0, 40)
+              : DEFAULT_PROFILE.username,
+
+            // Do not load arbitrary saved URLs into the image element.
+            avatar: typeof parsed.avatar === "string" &&
+                    parsed.avatar.startsWith("data:image/")
+              ? parsed.avatar
+              : DEFAULT_PROFILE.avatar
+          };
+        }
+      } catch (error) {
+        profile = { ...DEFAULT_PROFILE };
+      }
+
+      renderProfile();
+    }
+
+    function saveProfileToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+        return true;
+      } catch (error) {
+        showNotification("Unable to save. The browser may be out of storage.");
+        return false;
+      }
+    }
+
+    function renderProfile() {
+      document.getElementById("dashboard-name").textContent = profile.name;
+      document.getElementById("dashboard-username").textContent =
+        "@" + profile.username;
+
+      document.getElementById("avatar").src = profile.avatar;
+
+      document.getElementById("settings-avatar").src = profile.avatar;
+      document.getElementById("settings-name").textContent = profile.name;
+      document.getElementById("settings-username").textContent =
+        "@" + profile.username;
+
+      document.getElementById("edit-name").value = profile.name;
+    }
+
+    document.getElementById("login-form").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const name = document.getElementById("display-name").value.trim();
+
+      if (!username || !name) {
+        showNotification("Please enter a username and display name.");
+        return;
+      }
+
+      profile.username = username.slice(0, 40);
+      profile.name = name.slice(0, 60);
+
+      saveProfileToStorage();
+      renderProfile();
+
+      document.getElementById("settings-btn").classList.add("hidden");
+      document.getElementById("loading-text").textContent =
+        "Preparing demonstration...";
+
+      showScreen("screen-loading");
+
+      setTimeout(() => {
+        showScreen("screen-pin");
+        document.getElementById("demo-pin").focus();
+      }, 500);
+    });
+
+    document.getElementById("pin-form").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const pin = document.getElementById("demo-pin").value;
+
+      if (pin && !/^[0-9]{4}$/.test(pin)) {
+        showNotification("Enter exactly four digits, or leave the field empty.");
+        return;
+      }
+
+      // This is intentionally not real PIN authentication.
+      document.getElementById("demo-pin").value = "";
+
+      renderProfile();
+      document.getElementById("settings-btn").classList.remove("hidden");
+      showScreen("screen-dashboard");
+
+      showNotification("Demo opened. No real account was authenticated.");
+    });
+
+    function openSettings() {
+      renderProfile();
+      showScreen("screen-settings");
+    }
+
+    function saveProfile() {
+      const name = document.getElementById("edit-name").value.trim();
+
+      if (!name) {
+        showNotification("Please enter a display name.");
+        return;
+      }
+
+      profile.name = name.slice(0, 60);
+
+      if (saveProfileToStorage()) {
+        renderProfile();
+        showNotification("Demo profile saved on this browser.");
+      }
+    }
+
+    document.getEleme
